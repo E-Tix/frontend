@@ -21,6 +21,12 @@ import KullanıcıProfil from "./pages/KullanıcıProfil";
 import OrganizatorProfil from "./pages/OrganizatorProfil";
 import AdminProfil from "./pages/AdminProfil";
 import SifreGuncelle from "./pages/SifreGuncelle";
+import KullaniciHomePage from "./pages/KullaniciHomePage";
+import OrganizatorHomePage from "./pages/OrganizatorHomePage";
+import KategoriSayfasi from "./pages/KategoriSayfasi";
+import Etkinliklerim from "./pages/Etkinliklerim";
+import EtkinlikOlustur from "./pages/EtkinlikOlustur";
+
 
 function App() {
   return (
@@ -41,6 +47,11 @@ function App() {
             {/* Authenticated layout için MainLayout kullan */}
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Home />} />
+              <Route path="/kullanıcı-home" element={<KullaniciHomePage/>} />
+              <Route path="/organizatör-home" element={<OrganizatorHomePage />} />
+              <Route path="/kategori/:kategoriId" element={<KategoriSayfasi />} />
+              <Route path="/etkinliklerim" element={<Etkinliklerim />} />
+              <Route path="/etkinlik-olustur" element={<EtkinlikOlustur />} />
               <Route path="etkinlikler/sinema" element={<Sinema />} />
               <Route path="etkinlikler/bale" element={<Bale />} />
               <Route path="etkinlikler/tiyatro" element={<Tiyatro />} />

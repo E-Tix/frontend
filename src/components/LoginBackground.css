@@ -71,3 +71,76 @@
   z-index: 3;
   pointer-events: none;
 }
+
+/* Tablet Boyutu (768px ve altı) */
+@media (max-width: 768px) {
+  .outer-circle {
+    width: 80vw;
+    height: 80vw;
+  }
+
+  .overlay-imageL {
+    width: 100px;
+    top: 15px;
+    left: 15px;
+  }
+
+  .content-box {
+    padding: 10px;
+  }
+}
+
+/* Telefon Boyutu (480px ve altı) - TAM RESPONSIVE MOD */
+@media (max-width: 480px) {
+  .loginBackground {
+    background: none !important;
+    display: block;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .outer-circle {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    position: static !important;
+    transform: none !important;
+    background: transparent !important;
+  }
+
+  .inner-circle {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    background: rgba(71, 85, 90, 0.7) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    padding: 20px 0;
+  }
+
+  .background-imageL,
+  .overlay-imageL {
+    display: none !important;
+  }
+
+  .content-box {
+    width: 100% !important;
+    height: auto !important;
+    padding: 15px !important;
+    font-size: 16px !important;
+  }
+}
+
+/* Küçük Telefonlar (360px ve altı) */
+@media (max-width: 360px) {
+  .inner-circle {
+    padding: 15px 0 !important;
+  }
+
+  .content-box {
+    padding: 10px !important;
+    font-size: 14px !important;
+  }
+}

@@ -1,17 +1,29 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./EtkinlikKart.css";
 
-const EventCard = ({ event }) => {
-  return (
-    <div className="min-w-[200px] bg-white rounded-lg shadow-md p-4">
-      <img src={event.kapakFotografi} alt={event.etkinlikAdi} className="w-full h-40 object-cover rounded-md mb-3" />
-      <h3 className="font-bold text-lg mb-1">{event.etkinlikAdi}</h3>
-      <p className="text-sm text-gray-600 mb-2">{event.etkinlikAciklamasi}</p>
-      <div className="flex justify-between items-center">
-        <span className="text-sm text-gray-500">Bilet: ${event.biletFiyati}</span>
-        <span className="text-sm text-gray-500">{event.yasSiniri}+ Yaş</span>
-      </div>
-    </div>
-  );
+const EventCard = ({ etkinlik }) => {
+    const navigate = useNavigate();
+
+    return (
+        <div className="etkinlik-kart" onClick={() => navigate(`/etkinlik/${etkinlik.id}`)}>
+            <div className="kapak-container">
+                <img
+                    src={`http://localhost:8080/uploads/${etkinlik.kapakFotografi}`}
+                    alt="Kapak"
+                    className="kapak-foto"
+                />
+                {etkinlik.yasSiniri && (
+                    <span className="yas-etiketi">{etkinlik.yasSiniri}+</span>
+                )}
+            </div>
+            <div className="etkinlik-bilgi">
+                <h4>{etkinlik.etkinlikAdi}</h4>
+                <p>{etkinlik.olusturulmaTarihi}</p>
+                <p>Süre: {etkinlik.etkinlikSuresi} dk</p>
+            </div>
+        </div>
+    );
 };
 
 export default EventCard;
