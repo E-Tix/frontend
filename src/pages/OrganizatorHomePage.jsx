@@ -1,43 +1,49 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import EtkinlikKart from "../components/EventCard.jsx";
+import React, { useEffect, useState } from 'react';
+import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
-import "../components/OrganizatorHomePage.css";
+import '../components/OrganizatorHomePage.css'; // CSS için stil dosyası
 
 const OrganizatorHomePage = () => {
   const [etkinlikler, setEtkinlikler] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const organizatorId = localStorage.getItem("organizatorId");
-    axios
-      .get(`http://localhost:8080/api/etkinlik/organizator/${organizatorId}?limit=10`)
-      .then((res) => setEtkinlikler(res.data))
-      .catch((err) => console.error(err));
+    axios.get('http://localhost:8080/organizatorMainPage/', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // varsa token
+      },
+    })
+    .then(response => {
+      setEtkinlikler(response.data.content); // Page objesi dönüyor, bu yüzden .content
+    })
+    .catch(error => {
+      console.error('Etkinlikler yüklenemedi:', error);
+    });
   }, []);
 
   return (
-    <div className="organizator-home-container">
-      <h2>Oluşturduğunuz Etkinlikler</h2>
-      <div className="etkinlikler-scroll">
-        {etkinlikler.map((etkinlik) => (
-          <EtkinlikKart key={etkinlik.id} etkinlik={etkinlik} />
-        ))}
-        <div
-          className="ok-butonu"
-          onClick={() => navigate("/organizator/etkinliklerim")}
-        >
-          ➡
+    <div className="etkinlikler-container">
+      {etkinlikler.map(etkinlik => (
+        <div key={etkinlik.id} className="etkinlik-kart">
+          <div className="kapak-container">
+            <img
+              src={etkinlik.kapakFotografi}
+              alt="Kapak"
+              className="kapak-fotografi"
+            />
+            <span className="yas-siniri">{etkinlik.yasSiniri}+ </span>
+          </div>
+          <h3>{etkinlik.etkinlikAdi}</h3>
+          <p>Süre: {etkinlik.etkinlikSuresi} dakika</p>
         </div>
-      </div>
-
-      <button
-        className="plus-button"
-        onClick={() => navigate("/etkinlik-olustur")}
-      >
-        <Plus size={28} />
-      </button>
+      ))}
+        <button
+            className="plus-button"
+            onClick={() => navigate("/etkinlik-olustur")}
+        >
+            <Plus size={28} />
+        </button>
     </div>
   );
 };

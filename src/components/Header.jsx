@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 import "./Header.css";
 import logo from "../assets/E-Tix LOGO.png";
@@ -14,8 +15,9 @@ const Header = () => {
   const [selectedCity, setSelectedCity] = useState("Şehir Seç");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-
+  const { user } = useAuth();
   const { logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get("http://localhost:8080/api/cities")
@@ -30,9 +32,18 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-left">
-        <Link to="/" className="nav-item">
+        <div className="nav-item" onClick={() => {
+          if (user?.role === "Organizatör") {
+            navigate("/organizatör-home");
+          } else if (user?.role === "Kullanıcı") {
+            navigate("/kullanıcı-home");
+          } else {
+            navigate("/");
+          }
+        }}>
           <h1 className="site-name">E-TİX LOGO</h1>
-        </Link>
+        </div>
+
         <div
           className="location-selector"
           onClick={() => setDropdownOpen(!dropdownOpen)}
