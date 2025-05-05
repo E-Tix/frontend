@@ -2,9 +2,9 @@ import './App.css';
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { CityProvider } from "./context/CityContext";
 import MainLayout from "./layouts/MainLayout";  // MainLayout'ı import ettik
 import LoginLayout from "./layouts/LoginLayout";
-import Home from "./pages/Home";  // Sayfaları import et
 import Sinema from "./pages/Sinema";
 import Bale from "./pages/Bale";
 import Tiyatro from "./pages/Tiyatro";
@@ -32,41 +32,42 @@ function App() {
   return (
      <Router>
         <AuthProvider>
+            <CityProvider>
+              <Routes>
+                {/* LoginLayout altında toplanan sayfalar */}
+                <Route path="/" element={<LoginLayout />}>
+                  <Route path="login/:role" element={<Login />} />
+                  {/*<Route path="register" element={<Register />} />*/}
+                  <Route index element={<ChooseRole />} />
+                  <Route path="/choose-register" element={<ChooseRegisterRole />} />
+                  <Route path="/register/Kullanıcı" element={<RegisterUser />} />
+                  <Route path="/register/Organizatör" element={<RegisterOrganizator />} />
+                </Route>
 
-          <Routes>
-            {/* LoginLayout altında toplanan sayfalar */}
-            <Route path="/" element={<LoginLayout />}>
-              <Route path="login/:role" element={<Login />} />
-              {/*<Route path="register" element={<Register />} />*/}
-              <Route path="chooserole" element={<ChooseRole />} />
-              <Route path="/choose-register" element={<ChooseRegisterRole />} />
-              <Route path="/register/Kullanıcı" element={<RegisterUser />} />
-              <Route path="/register/Organizatör" element={<RegisterOrganizator />} />
-            </Route>
+                {/* Authenticated layout için MainLayout kullan */}
+                <Route path="/" element={<MainLayout />}>
+                  {/*<Route index element={<Home />} />*/}
+                  <Route path="/kullanıcı-home" element={<KullaniciHomePage/>} />
+                  <Route path="/organizatör-home" element={<OrganizatorHomePage />} />
+                  <Route path="/kategori/:kategoriId" element={<KategoriSayfasi />} />
+                  <Route path="/etkinliklerim" element={<Etkinliklerim />} />
+                  <Route path="/etkinlik-olustur" element={<EtkinlikOlustur />} />
+                  <Route path="etkinlikler/sinema" element={<Sinema />} />
+                  <Route path="etkinlikler/bale" element={<Bale />} />
+                  <Route path="etkinlikler/tiyatro" element={<Tiyatro />} />
+                  <Route path="etkinlikler/konferans" element={<Konferans />} />
+                  <Route path="etkinlikler/spor" element={<Spor />} />
+                  {/*<Route path="profil" element={<Profil />} />*/}
 
-            {/* Authenticated layout için MainLayout kullan */}
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<Home />} />
-              <Route path="/kullanıcı-home" element={<KullaniciHomePage/>} />
-              <Route path="/organizatör-home" element={<OrganizatorHomePage />} />
-              <Route path="/kategori/:kategoriId" element={<KategoriSayfasi />} />
-              <Route path="/etkinliklerim" element={<Etkinliklerim />} />
-              <Route path="/etkinlik-olustur" element={<EtkinlikOlustur />} />
-              <Route path="etkinlikler/sinema" element={<Sinema />} />
-              <Route path="etkinlikler/bale" element={<Bale />} />
-              <Route path="etkinlikler/tiyatro" element={<Tiyatro />} />
-              <Route path="etkinlikler/konferans" element={<Konferans />} />
-              <Route path="etkinlikler/spor" element={<Spor />} />
-              {/*<Route path="profil" element={<Profil />} />*/}
+                  <Route path="/profil" element={<ProfileRedirect />} />
+                  <Route path="/profil/Kullanıcı" element={<KullanıcıProfil />} />
+                  <Route path="/profil/Organizatör" element={<OrganizatorProfil />} />
+                  <Route path="/profil/Admin" element={<AdminProfil />} />
 
-              <Route path="/profil" element={<ProfileRedirect />} />
-              <Route path="/profil/Kullanıcı" element={<KullanıcıProfil />} />
-              <Route path="/profil/Organizatör" element={<OrganizatorProfil />} />
-              <Route path="/profil/Admin" element={<AdminProfil />} />
-
-              <Route path="/sifre-guncelle" element={<SifreGuncelle />} />
-            </Route>
-          </Routes>
+                  <Route path="/sifre-guncelle" element={<SifreGuncelle />} />
+                </Route>
+              </Routes>
+            </CityProvider>
         </AuthProvider>
      </Router>
   );

@@ -1,0 +1,403 @@
+/* Base Layout Styles */
+.etkinlik-page-container {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1a1b1e 0%, #2d3748 100%);
+}
+
+.etkinlik-form-wrapper {
+    width: 100%;
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    justify-content: center;
+}
+
+.etkinlik-form-container {
+    width: 100%;
+    max-width: 1200px;
+    min-height: 500px;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, rgba(26, 27, 30, 0.95) 0%, rgba(45, 55, 72, 0.95) 100%);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.etkinlik-form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(66, 153, 225, 0.15) 0%, transparent 70%);
+    z-index: -1;
+}
+
+/* Header Styles */
+.etkinlik-form-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.etkinlik-form-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(90deg, #4299e1, #9f7aea);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.5px;
+}
+
+.etkinlik-form-divider {
+    height: 3px;
+    width: 100px;
+    margin: 1rem auto;
+    background: linear-gradient(90deg, #4299e1, #9f7aea);
+    border-radius: 3px;
+}
+
+/* Form Layout */
+.etkinlik-form-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.etkinlik-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    flex: 1;
+}
+
+.etkinlik-form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.etkinlik-form-row {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.half-width {
+    flex: 1;
+}
+
+/* Form Elements */
+.etkinlik-form-group {
+    margin-bottom: 0;
+}
+
+.etkinlik-form-label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.3px;
+}
+
+.etkinlik-form-input,
+.etkinlik-form-select,
+.etkinlik-form-textarea {
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.etkinlik-form-input:focus,
+.etkinlik-form-select:focus,
+.etkinlik-form-textarea:focus {
+    outline: none;
+    border-color: #9f7aea;
+    box-shadow: 0 0 0 3px rgba(159, 122, 234, 0.2);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.etkinlik-form-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Dropdown Styling */
+.etkinlik-form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+    color: white;
+}
+
+/* Dropdown Options Styling */
+.etkinlik-form-select option {
+    background-color: #4a1d96; /* Dark purple */
+    color: white;
+    padding: 10px;
+}
+
+/* Firefox specific styling */
+@-moz-document url-prefix() {
+    .etkinlik-form-select {
+        color: white !important;
+        text-shadow: 0 0 0 white;
+    }
+    .etkinlik-form-select option {
+        background-color: #4a1d96;
+        color: white;
+    }
+}
+
+/* IE10+ specific styling */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .etkinlik-form-select {
+        color: white;
+    }
+    .etkinlik-form-select option {
+        background-color: #4a1d96;
+        color: white;
+    }
+}
+
+/* File Upload */
+.etkinlik-file-upload {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.etkinlik-file-input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.etkinlik-file-label {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(90deg, #4299e1, #667eea);
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.etkinlik-file-label:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+}
+
+.etkinlik-file-name {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Sessions Section */
+.etkinlik-sessions-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.etkinlik-sessions-title {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: #9f7aea;
+    font-weight: 600;
+}
+
+.etkinlik-session-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.etkinlik-session-input {
+    flex: 1;
+    padding: 0.85rem 1.25rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.etkinlik-add-session-btn {
+    padding: 0.85rem 1.75rem;
+    background: linear-gradient(90deg, #9f7aea, #667eea);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.etkinlik-add-session-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(159, 122, 234, 0.3);
+}
+
+.etkinlik-sessions-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.etkinlik-session-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1.25rem;
+    background: rgba(159, 122, 234, 0.1);
+    border: 1px solid rgba(159, 122, 234, 0.2);
+    border-radius: 8px;
+}
+
+.etkinlik-session-time {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.etkinlik-remove-session {
+    background: rgba(245, 101, 101, 0.2);
+    color: #f56565;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.etkinlik-remove-session:hover {
+    background: rgba(245, 101, 101, 0.3);
+    transform: scale(1.1);
+}
+
+/* Footer & Submit Button */
+.etkinlik-form-footer {
+    margin-top: auto;
+    padding-top: 2.5rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.etkinlik-submit-btn {
+    padding: 1rem 2.5rem;
+    background: linear-gradient(90deg, #4299e1, #9f7aea);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+}
+
+.etkinlik-submit-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+}
+
+.etkinlik-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: linear-gradient(90deg, #4a5568, #718096);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .etkinlik-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .etkinlik-form-row {
+        flex-direction: column;
+    }
+
+    .half-width {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .etkinlik-form-wrapper {
+        padding: 10px;
+    }
+
+    .etkinlik-form-container {
+        padding: 1.5rem;
+        min-height: auto;
+    }
+
+    .etkinlik-session-controls {
+        flex-direction: column;
+    }
+
+    .etkinlik-add-session-btn {
+        width: 100%;
+    }
+
+    .etkinlik-sessions-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-height: 800px) {
+    .etkinlik-form-container {
+        padding: 1.5rem;
+    }
+
+    .etkinlik-form-header {
+        margin-bottom: 1.5rem;
+    }
+}

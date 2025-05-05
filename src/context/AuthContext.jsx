@@ -69,8 +69,10 @@ export const AuthProvider = ({ children }) => {
 
       if (role === "Organizatör"){
           navigate("/organizatör-home")
+      }else if (role === "Kullanıcı"){
+          navigate("/kullanıcı-home"); // Giriş başarılıysa ana sayfaya yönlendir
       }else{
-          navigate("/"); // Giriş başarılıysa ana sayfaya yönlendir
+          navigate("/");
       }
 
     } catch (error) {
