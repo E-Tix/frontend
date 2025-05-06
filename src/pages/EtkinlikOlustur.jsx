@@ -53,19 +53,7 @@ const AddEvent = () => {
         }
     }, [secilenSehir, user.token])
 
-    const handleKapakYukle = async (e) => {
-        const file = e.target.files[0];
-        const formData = new FormData();
-        formData.append('file', file);
-        try {
-            const res = await axios.post('http://localhost:8080/etkinlikler/kapak-foto/${eventId}', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            setKapakFotografi(res.data);
-        } catch (err) {
-            console.error('Kapak fotoğrafı yüklenemedi', err);
-        }
-    };
+
 
     const handleSeansEkle = () => {
         if (yeniSeans && etkinlikSuresi) {
@@ -162,19 +150,11 @@ const AddEvent = () => {
                                     <label className="etkinlik-form-label">Etkinlik Afişi</label>
                                     <div className="etkinlik-file-upload">
                                         <input
-                                            type="file"
-                                            id="eventPoster"
-                                            onChange={handleKapakYukle}
-                                            className="etkinlik-file-input"
+                                            type="text"
+                                            className="etkinlik-form-input"
+                                            onChange = {e => setKapakFotografi(e.target.value)}
+                                            placeholder="https://..."
                                         />
-                                        <label htmlFor="eventPoster" className="etkinlik-file-label">
-                                            {kapakFotografi ? 'Resmi değiştir' : 'Resim yükle'}
-                                        </label>
-                                        {kapakFotografi && (
-                                            <span className="etkinlik-file-name">
-                                                {typeof kapakFotografi === 'string' ? 'Resim yüklendi' : kapakFotografi.name}
-                                            </span>
-                                        )}
                                     </div>
                                 </div>
                             </div>

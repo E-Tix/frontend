@@ -31,6 +31,7 @@ const OrganizatorHomePage = () => {
               src={etkinlik.kapakFotografi}
               alt="Kapak"
               className="kapak-fotografi"
+
             />
             <span className="yas-siniri">{etkinlik.yasSiniri}+ </span>
           </div>
