@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import EventCard from "./EventCard";
+import "../components/HorizontalScrollSection.css";
 
 const HorizontalScrollSection = ({ title, etkinlikler, onTitleClick }) => {
   const scrollRef = useRef(null);
@@ -12,35 +13,42 @@ const HorizontalScrollSection = ({ title, etkinlikler, onTitleClick }) => {
   };
 
   return (
-    <div className="mb-8">
-      <h2 onClick={onTitleClick} className="text-xl font-bold cursor-pointer mb-2 hover:underline">
+    <div className="horizontal-scroll-section">
+      <h2
+        onClick={onTitleClick}
+        className="section-title"
+      >
         {title}
       </h2>
-      <div className="relative">
+      <div className="scroll-container">
         <button
           onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-300 p-2 rounded-full z-10"
+          className="scroll-button left"
+          aria-label="Scroll left"
         >
           <FaChevronLeft />
         </button>
+
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto gap-4 scrollbar-hide px-8"
-          style={{ scrollBehavior: "smooth" }}
+          className="scroll-content"
         >
           {etkinlikler.map((etkinlik) => (
             <EventCard key={etkinlik.etkinlikID} etkinlik={etkinlik} />
           ))}
+
           <div
             onClick={onTitleClick}
-            className="w-64 h-72 flex items-center justify-center border border-dashed border-gray-400 cursor-pointer hover:bg-gray-100"
+            className="view-all-card"
           >
             → {title} sayfasına git
           </div>
         </div>
+
         <button
           onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-300 p-2 rounded-full z-10"
+          className="scroll-button right"
+          aria-label="Scroll right"
         >
           <FaChevronRight />
         </button>

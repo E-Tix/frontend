@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "../api/axios.js";
-import HorizontalScrollSection from "./HorizontalScrollSection.jsx"; // her tür için
+import HorizontalScrollSection from "./HorizontalScrollSection.jsx";
 import { useNavigate } from "react-router-dom";
 import { useCity } from "../context/CityContext";
+import "../components/KullaniciHomePage.css";
 
 const etkinlikTurleri = ["Sinema", "Tiyatro", "Bale", "Konferans", "Spor"];
 
@@ -37,24 +38,29 @@ const KullaniciHomePage = () => {
     }
   };
 
-
   const handleSehirChange = (e) => {
     const value = e.target.value;
     setSehir(value === "Hepsi" ? null : value);
   };
 
   return (
-    <div className="p-6">
+    <div className="user-home-container">
+      <header className="user-header">
+        <h1 className="user-title">Etkinlikler</h1>
+        <p className="user-tagline">Şehrinizdeki en güncel etkinlikler</p>
+      </header>
 
+      <div className="user-events-container">
+        {etkinlikTurleri.map((tur) => (
+          <HorizontalScrollSection
+            key={tur}
+            title={tur}
+            etkinlikler={etkinlikler[tur] || []}
+            onTitleClick={() => navigate(`/etkinlikler/${tur.toLowerCase()}`)}
+          />
+        ))}
+      </div>
 
-      {etkinlikTurleri.map((tur) => (
-        <HorizontalScrollSection
-          key={tur}
-          title={tur}
-          etkinlikler={etkinlikler[tur] || []}
-          onTitleClick={() => navigate(`/etkinlikler/${tur.toLowerCase()}`)}
-        />
-      ))}
     </div>
   );
 };

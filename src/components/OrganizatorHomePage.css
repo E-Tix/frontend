@@ -1,30 +1,33 @@
 .etkinlikler-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
-  padding: 30px;
-  max-width: 1400px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 40px 5%;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
+
 .etkinlik-kart {
-  background: #fff;
+  background: rgba(224, 218, 231, 0.4);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 32px rgba(124, 126, 155, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(4px);
 }
 
 .etkinlik-kart:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
 }
 
 
 .kapak-container {
   position: relative;
-  height: 180px;
+  height: 200px;
   overflow: hidden;
 }
 
@@ -32,11 +35,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .etkinlik-kart:hover .kapak-fotografi {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 
@@ -44,108 +47,135 @@
   position: absolute;
   top: 15px;
   right: 15px;
-  background: rgba(0, 0, 0, 0.7);
+  background: linear-gradient(135deg, #9a86c8 0%, #191618 100%);
   color: white;
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(255, 75, 43, 0.3);
 }
 
 
 .etkinlik-kart h3 {
-  margin: 15px 20px 5px;
-  font-size: 1.2rem;
-  color: #2d3748;
-  font-weight: 600;
+  margin: 18px 20px 8px;
+  font-size: 1.3rem;
+  color: #1a1a2e;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  font-family: 'Montserrat', sans-serif;
 }
+
 
 .etkinlik-kart p {
   margin: 0 20px 20px;
-  color: #718096;
-  font-size: 0.9rem;
+  color: #4a4a6a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-weight: 400;
 }
 
 
 .plus-button {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 60px;
-  height: 60px;
+  bottom: 40px;
+  right: 40px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #434343 0%, #2a1937 100%);
   color: white;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-  transition: all 0.3s ease;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 100;
+  font-size: 28px;
 }
 
 .plus-button:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  transform: scale(1.15) rotate(90deg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+
+.price-tag {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 15px;
+  backdrop-filter: blur(4px);
 }
 
 
 @media (max-width: 1024px) {
   .etkinlikler-container {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
   }
 }
 
 @media (max-width: 768px) {
   .etkinlikler-container {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-    padding: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 30px 4%;
   }
 
   .kapak-container {
-    height: 150px;
+    height: 180px;
   }
 
   .plus-button {
-    width: 50px;
-    height: 50px;
-    bottom: 20px;
-    right: 20px;
+    width: 56px;
+    height: 56px;
+    bottom: 30px;
+    right: 30px;
   }
 }
 
 @media (max-width: 480px) {
   .etkinlikler-container {
     grid-template-columns: 1fr;
-    gap: 15px;
-    padding: 10px;
+    gap: 20px;
+    padding: 20px;
   }
 
   .etkinlik-kart h3 {
-    font-size: 1.1rem;
-    margin: 12px 15px 5px;
+    font-size: 1.2rem;
   }
 
   .plus-button {
-    width: 45px;
-    height: 45px;
-    bottom: 15px;
-    right: 15px;
+    width: 52px;
+    height: 52px;
+    bottom: 25px;
+    right: 25px;
   }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .etkinlik-kart {
-  animation: fadeIn 0.5s ease forwards;
+  animation: cardEntrance 0.6s ease-out forwards;
   opacity: 0;
 }
 

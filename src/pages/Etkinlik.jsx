@@ -4,13 +4,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Etkinlik = () => {
-  const { eventId } = useParams(); // URL parametresinden etkinlik ID'sini al
+  const { eventId } = useParams();
   const [etkinlik, setEtkinlik] = useState(null);
   const navigate = useNavigate();
   const { user } = useAuth();
   const eventIdLong = Number(eventId);
-  console.log("eventId:", eventId);
-
 
   useEffect(() => {
     const fetchEtkinlik = async () => {
@@ -18,7 +16,6 @@ const Etkinlik = () => {
         const response = await axios.get(`/mainPage/${eventIdLong}`, {
           headers: { Authorization: `Bearer ${user?.token}` }
         });
-        console.log("Etkinlik Verisi:", response.data);
         setEtkinlik(response.data);
       } catch (error) {
         console.error("Etkinlik bilgileri alınırken hata oluştu:", error);
@@ -28,7 +25,7 @@ const Etkinlik = () => {
   }, [eventIdLong, user?.token]);
 
   if (!etkinlik) {
-    return <div>Yükleniyor...</div>;
+    return <div className="event-loading">Yükleniyor...</div>;
   }
 
   const handleSalonSeansClick = (seansId) => {
@@ -36,58 +33,52 @@ const Etkinlik = () => {
   };
 
   return (
-    <div className="p-6">
-      {/* Etkinlik Üst Bilgi */}
-      <div className="flex justify-between mb-8">
-        {/* Sol Kısım */}
-        <div className="flex flex-col space-y-4">
-          <h1 className="text-3xl font-bold">{etkinlik.etkinlikAdi}</h1>
-          <p className="text-lg">{etkinlik.etkinlikTur.etkinlikTurAdi}</p>
-          <p className="text-gray-700">{etkinlik.etkinlikAciklamasi}</p>
-          <button
-            disabled
-            className="bg-blue-500 text-white py-2 px-4 rounded-md cursor-not-allowed"
-          >
-            Bilet Al - {etkinlik.biletFiyati} TL
-          </button>
+    <div className="event-container">
+      {/* Event Header Section */}
+      <div className="event-header">
+        {/* Left Section - Event Info */}
+        <div className="event-info">
+          <h1 className="event-title">{etkinlik.etkinlikAdi}</h1>
+          <span className="event-genre">{etkinlik.etkinlikTur.etkinlikTurAdi}</span>
+          <p className="event-description">{etkinlik.etkinlikAciklamasi}</p>
+          <div className="event-price">
+            <span>{etkinlik.biletFiyati} TL</span>
+          </div>
         </div>
 
-        {/* Sağ Kısım (Kapak Fotoğrafı) */}
-        <div className="relative">
+        {/* Right Section - Event Poster */}
+        <div className="event-poster">
           <img
             src={etkinlik.kapakFotografi}
             alt={etkinlik.etkinlikAdi}
-            className="w-64 h-96 object-cover rounded-md"
+            className="poster-image"
           />
-          <div className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl">
-            +{etkinlik.yasSiniri}
-          </div>
+          <div className="age-restriction">+{etkinlik.yasSiniri}</div>
         </div>
       </div>
 
-      {/* Salon ve Seans Bilgisi */}
-      <div className="space-y-8">
+      {/* Sessions Section */}
+      <div className="sessions-container">
+        <h2 className="sessions-title">Seanslar</h2>
         {etkinlik.etkinlikSalonSeansEntities.map((salonSeans) => (
           <div
             key={salonSeans.etkinlikSalonSeansID}
-            className="max-w-full border rounded-lg shadow-md overflow-hidden"
+            className="session-card"
           >
-            <div className="flex justify-between p-4">
-              <div className="flex flex-col">
-                <h3 className="font-semibold">{salonSeans.salon.salonAdi}</h3>
-                <p className="text-sm text-gray-600">{salonSeans.salon.adres}</p>
-                <p className="text-sm text-gray-500">
-                  {new Date(salonSeans.seans.tarih).toLocaleDateString()} -{" "}
-                  {new Date(salonSeans.seans.tarih).toLocaleTimeString()}
-                </p>
-              </div>
-              <button
-                onClick={() => handleSalonSeansClick(salonSeans.seans.seansID)}
-                className="bg-green-500 text-white py-2 px-4 rounded-md"
-              >
-                Koltuk Seç
-              </button>
+            <div className="session-info">
+              <h3 className="theater-name">{salonSeans.salon.salonAdi}</h3>
+              <p className="theater-address">{salonSeans.salon.adres}</p>
+              <p className="session-time">
+                {new Date(salonSeans.seans.tarih).toLocaleDateString()} -{" "}
+                {new Date(salonSeans.seans.tarih).toLocaleTimeString()}
+              </p>
             </div>
+            <button
+              onClick={() => handleSalonSeansClick(salonSeans.seans.seansID)}
+              className="seat-selection-btn"
+            >
+              Koltuk Seç
+            </button>
           </div>
         ))}
       </div>

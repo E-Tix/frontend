@@ -27,6 +27,7 @@ import KategoriSayfasi from "./pages/KategoriSayfasi";
 import Etkinliklerim from "./pages/Etkinliklerim";
 import EtkinlikOlustur from "./pages/EtkinlikOlustur";
 import Etkinlik from "./pages/Etkinlik"
+import BiletAl from "./pages/BiletAl.jsx"
 
 function App() {
   return (
@@ -60,7 +61,7 @@ function App() {
                   <Route path="etkinlikler/konferans" element={<Konferans />} />
                   <Route path="etkinlikler/spor" element={<Spor />} />
                   {/*<Route path="profil" element={<Profil />} />*/}
-
+                  <Route path="/koltuk-secimi/:seansId" element={<BiletAl />} />
                   <Route path="/profil" element={<ProfileRedirect />} />
                   <Route path="/profil/Kullanıcı" element={<KullanıcıProfil />} />
                   <Route path="/profil/Organizatör" element={<OrganizatorProfil />} />
