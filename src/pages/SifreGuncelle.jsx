@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "../components/SifreGuncelle.css";
 
 const SifreGuncelle = () => {
     const { user } = useAuth();
@@ -67,53 +68,53 @@ const SifreGuncelle = () => {
     };
 
     return (
-        <div className="max-w-xl mx-auto mt-10 p-6 border rounded-xl shadow-lg bg-white space-y-4">
-            <h2 className="text-2xl font-semibold mb-4">Şifre Güncelle</h2>
+        <div className="password-update-container">
+            <h2 className="password-update-title">Şifre Güncelle</h2>
 
-            <div>
-                <label className="font-semibold">Eski Şifre:</label>
+            <div className="password-form-group">
+                <label className="password-form-label">Eski Şifre:</label>
                 <input
                     type="password"
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
-                    className="border px-2 py-1 rounded w-full"
+                    className="password-form-input"
                 />
             </div>
 
-            <div>
-                <label className="font-semibold">Yeni Şifre:</label>
+            <div className="password-form-group">
+                <label className="password-form-label">Yeni Şifre:</label>
                 <input
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="border px-2 py-1 rounded w-full"
+                    className="password-form-input"
                 />
             </div>
 
-            <div>
-                <label className="font-semibold">Yeni Şifre Tekrar:</label>
+            <div className="password-form-group">
+                <label className="password-form-label">Yeni Şifre Tekrar:</label>
                     <input
                     type="password"
                     value={confirmNewPassword}
                     onChange={(e) => setConfirmNewPassword(e.target.value)}
-                    className="border px-2 py-1 rounded w-full"
+                    className="password-form-input"
                 />
             </div>
 
             {/* Hata ve başarı mesajları */}
-            {error && <p className="text-red-500">{error}</p>}
-            {success && <p className="text-green-500">{success}</p>}
+            {error && <p className="error-message">{error}</p>}
+            {success && <p className="success-message">{success}</p>}
 
-            <div className="flex mt-6 gap-4">
+            <div className="password-action-buttons">
                 <button
                     onClick={handleSubmit}
-                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+                    className="password-btn password-btn-confirm"
                 >
                     Onayla
                 </button>
                 <button
                     onClick={() => window.history.back()} // İptal butonuna tıklandığında önceki sayfaya yönlendirme
-                    className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+                    className="password-btn password-btn-cancel"
                 >
                     İptal
                 </button>

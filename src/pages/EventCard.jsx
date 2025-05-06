@@ -1,8 +1,22 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const EventCard = ({ etkinlik }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    if (etkinlik?.etkinlikID) {
+        navigate(`/etkinlik/${etkinlik.etkinlikID}`);
+      } else {
+        console.error("Etkinlik ID bulunamadı.");
+      } // Etkinlik detay sayfasına yönlendir
+  };
+
   return (
-    <div className="relative w-64 h-72 border rounded overflow-hidden shadow hover:shadow-lg cursor-pointer">
+    <div
+      className="relative w-64 h-72 border rounded overflow-hidden shadow hover:shadow-lg cursor-pointer"
+      onClick={handleCardClick} // Kart tıklama olayını bağladık
+    >
       <div className="relative h-2/3">
         <img
           src={etkinlik.kapakFotografi}

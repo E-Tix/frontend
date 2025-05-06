@@ -26,7 +26,7 @@ import OrganizatorHomePage from "./pages/OrganizatorHomePage";
 import KategoriSayfasi from "./pages/KategoriSayfasi";
 import Etkinliklerim from "./pages/Etkinliklerim";
 import EtkinlikOlustur from "./pages/EtkinlikOlustur";
-
+import Etkinlik from "./pages/Etkinlik"
 
 function App() {
   return (
@@ -42,6 +42,7 @@ function App() {
                   <Route path="/choose-register" element={<ChooseRegisterRole />} />
                   <Route path="/register/Kullanıcı" element={<RegisterUser />} />
                   <Route path="/register/Organizatör" element={<RegisterOrganizator />} />
+                  <Route path="/sifre-guncelle" element={<SifreGuncelle />} />
                 </Route>
 
                 {/* Authenticated layout için MainLayout kullan */}
@@ -50,6 +51,7 @@ function App() {
                   <Route path="/kullanıcı-home" element={<KullaniciHomePage/>} />
                   <Route path="/organizatör-home" element={<OrganizatorHomePage />} />
                   <Route path="/kategori/:kategoriId" element={<KategoriSayfasi />} />
+                  <Route path="/etkinlik/:eventId" element={<Etkinlik />} />
                   <Route path="/etkinliklerim" element={<Etkinliklerim />} />
                   <Route path="/etkinlik-olustur" element={<EtkinlikOlustur />} />
                   <Route path="etkinlikler/sinema" element={<Sinema />} />
@@ -64,7 +66,7 @@ function App() {
                   <Route path="/profil/Organizatör" element={<OrganizatorProfil />} />
                   <Route path="/profil/Admin" element={<AdminProfil />} />
 
-                  <Route path="/sifre-guncelle" element={<SifreGuncelle />} />
+
                 </Route>
               </Routes>
             </CityProvider>
