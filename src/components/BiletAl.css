@@ -1,0 +1,64 @@
+.salon-container {
+    text-align: center;
+    padding: 30px;
+    background-color: #1e1e1e;
+    color: white;
+    min-height: 100vh;
+  }
+
+  .koltuk-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+
+  .koltuk-button {
+    width: 40px;
+    height: 40px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #333;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .koltuk-button:hover {
+    background-color: #bbb;
+  }
+
+  .koltuk-button.secili {
+    background-color: green;
+    color: white;
+  }
+
+  .perde {
+    margin: 30px auto;
+    background-color: #ff4747;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    width: fit-content;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+
+  .buton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .buton:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+  }

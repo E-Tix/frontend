@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import '../components/BiletAl.css';
 
 const BiletAl = ({ seansId, salonId, kullaniciId }) => {
   const [koltuklar, setKoltuklar] = useState([]);
@@ -32,27 +33,31 @@ const BiletAl = ({ seansId, salonId, kullaniciId }) => {
   };
 
   return (
-    <div>
+    <div className="salon-container">
       <h2>Koltuk Seç</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 40px)', gap: '8px' }}>
-        {koltuklar.map((k, index) => (
+
+      <div className="koltuk-grid">
+        {koltuklar.map((k) => (
           <button
             key={k.koltukID}
+            className={`koltuk-button ${
+              secilenKoltuk?.koltukID === k.koltukID ? 'secili' : ''
+            }`}
             onClick={() => handleKoltukSec(k)}
-            style={{
-              backgroundColor: secilenKoltuk?.koltukID === k.koltukID ? 'green' : '#ccc',
-              padding: '10px',
-              borderRadius: '4px'
-            }}
           >
             {k.satir}-{k.sutun}
           </button>
         ))}
       </div>
-      <br />
-      <button onClick={handleBiletAl} disabled={!secilenKoltuk}>Bileti Satın Al</button>
+
+      <div className="perde">PERDE</div>
+
+      <button className="buton" onClick={handleBiletAl} disabled={!secilenKoltuk}>
+        Bileti Satın Al
+      </button>
     </div>
   );
+
 };
 
 export default BiletAl;

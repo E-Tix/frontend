@@ -27,7 +27,7 @@ import KategoriSayfasi from "./pages/KategoriSayfasi";
 import Etkinliklerim from "./pages/Etkinliklerim";
 import EtkinlikOlustur from "./pages/EtkinlikOlustur";
 import Etkinlik from "./pages/Etkinlik"
-import BiletAl from "./pages/BiletAl.jsx"
+import BiletAl from "./pages/BiletAl"
 
 function App() {
   return (

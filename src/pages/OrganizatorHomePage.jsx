@@ -15,7 +15,8 @@ const OrganizatorHomePage = () => {
       },
     })
     .then(response => {
-      setEtkinlikler(response.data.content); // Page objesi dönüyor, bu yüzden .content
+      setEtkinlikler(response.data.content);
+       console.log(response.data.content)// Page objesi dönüyor, bu yüzden .content
     })
     .catch(error => {
       console.error('Etkinlikler yüklenemedi:', error);
@@ -28,10 +29,9 @@ const OrganizatorHomePage = () => {
         <div key={etkinlik.id} className="etkinlik-kart">
           <div className="kapak-container">
             <img
-              src={etkinlik.kapakFotografi}
-              alt="Kapak"
+              src={etkinlik.kapakFotografi || 'https://via.placeholder.com/300x200'}
+              alt={etkinlik.etkinlikAdi}
               className="kapak-fotografi"
-
             />
             <span className="yas-siniri">{etkinlik.yasSiniri}+ </span>
           </div>
