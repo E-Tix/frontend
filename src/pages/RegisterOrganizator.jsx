@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "../components/RegisterOrganizator.css";
 
 const RegisterOrganizer = () => {
@@ -27,41 +28,42 @@ const RegisterOrganizer = () => {
 
         // Şifre eşleşme kontrolü
         if (organizerInfo.sifre !== organizerInfo.sifreTekrar) {
-            alert("Şifreler eşleşmiyor!");
+            toast.warning("Şifreler eşleşmiyor!");
             return;
         }
 
         // Şifre uzunluğu kontrolü
         if (organizerInfo.sifre.length < 6) {
-            alert("Şifre en az 6 karakter olmalıdır!");
+            toast.warning("Şifre en az 6 karakter olmalıdır!");
             return;
         }
 
         // Telefon numarası formatı kontrolü
         const phoneRegex = /^\d{10,15}$/;
         if (!phoneRegex.test(organizerInfo.telefonNumarasi)) {
-            alert("Telefon numarası geçersiz!");
+            toast.warning("Telefon numarası geçersiz!");
             return;
         }
 
         // Vergi numarası formatı kontrolü
         const taxNumberRegex = /^\d{10}$/;
         if (!taxNumberRegex.test(organizerInfo.vergiNo)) {
-            alert("Vergi numarası 10 haneli olmalıdır ve sadece rakamlardan oluşmalıdır!");
+            toast.warning("Vergi numarası 10 haneli olmalıdır ve sadece rakamlardan oluşmalıdır!");
             return;
         }
 
         // IBAN formatı kontrolü
         const ibanRegex = /^TR\d{24}$/;
         if (!ibanRegex.test(organizerInfo.iban)) {
-            alert("IBAN geçersiz. Örnek: TR000000000000000000000000");
+            toast.warning("IBAN geçersiz. Örnek: TR000000000000000000000000");
             return;
         }
 
         try {
             await register(organizerInfo, "Organizatör");
+            toast.success("Kayıt başarılı!");
         } catch (err) {
-            alert("Kayıt başarısız!");
+            toast.error("Kayıt başarısız!");
         }
     };
 

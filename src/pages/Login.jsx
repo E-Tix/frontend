@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "../components/Login.css";
 
 const Login = () => {
     const { login } = useAuth();
-    const { role } = useParams(); // URL'den admin/user/organizer bilgisi geliyor
+    const { role } = useParams(); // URL'den Admin/Kullanıcı/Organizatör bilgisi geliyor
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -15,8 +16,9 @@ const Login = () => {
         e.preventDefault();
         try {
             await login(emailOrUsername, password, role);
+            toast.success("Giriş Başarılı");
         } catch (err) {
-            alert("Giriş başarısız! Lütfen bilgilerinizi kontrol edin.");
+            toast.error("Giriş başarısız! Lütfen bilgilerinizi kontrol edin.");
         }
     };
 

@@ -1,5 +1,7 @@
 import './App.css';
 import React from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CityProvider } from "./context/CityContext";
@@ -10,7 +12,6 @@ import Bale from "./pages/Bale";
 import Tiyatro from "./pages/Tiyatro";
 import Konferans from "./pages/Konferans";
 import Spor from "./pages/Spor";
-import Profil from "./pages/Profil";
 import ChooseRole from "./pages/ChooseRole";
 import Login from "./pages/Login";
 import ChooseRegisterRole from "./pages/ChooseRegisterRole";
@@ -31,6 +32,7 @@ import BiletAl from "./pages/BiletAl"
 
 function App() {
   return (
+  <>
      <Router>
         <AuthProvider>
             <CityProvider>
@@ -60,7 +62,7 @@ function App() {
                   <Route path="etkinlikler/tiyatro" element={<Tiyatro />} />
                   <Route path="etkinlikler/konferans" element={<Konferans />} />
                   <Route path="etkinlikler/spor" element={<Spor />} />
-                  {/*<Route path="profil" element={<Profil />} />*/}
+
                   <Route path="/koltuk-secimi/:seansId" element={<BiletAl />} />
                   <Route path="/profil" element={<ProfileRedirect />} />
                   <Route path="/profil/Kullanıcı" element={<KullanıcıProfil />} />
@@ -73,6 +75,8 @@ function App() {
             </CityProvider>
         </AuthProvider>
      </Router>
+      <ToastContainer position="top-center" autoClose={3000} />
+      </>
   );
 }
 

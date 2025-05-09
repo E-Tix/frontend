@@ -45,22 +45,6 @@ export const AuthProvider = ({ children }) => {
 
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
       const email = decodedToken.sub;
-/*
-      // organizatorId'yi email ile backend'den al
-      let organizatorId = null;
-      if (role === "Organizatör") {
-        const idResponse = await axios.get(
-          `http://localhost:8080/api/organizator/get-id-by-email/${email}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-        organizatorId = idResponse.data;
-        localStorage.setItem("organizatorId", organizatorId);
-      }*/
-
 
       const userData = { token, role }; // Kullanıcı bilgilerini ve token'ı kaydediyoruz
 

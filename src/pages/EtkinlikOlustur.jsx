@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 import "../components/EtkinlikOlustur.css";
 
 const AddEvent = () => {
@@ -19,6 +20,7 @@ const AddEvent = () => {
     const [secilenSehir, setSecilenSehir] = useState('');
     const [secilenSalon, setSecilenSalon] = useState('');
     const [secilenTur, setSecilenTur] = useState('');
+    const [fragmanLinki, setFragmanLinki] = useState('');
 
     useEffect(() => {
         axios.get('http://localhost:8080/sehir/sehirler')
@@ -72,6 +74,7 @@ const AddEvent = () => {
     };
 
     const handleSubmit = async () => {
+        // Etkinlik türüne göre gönderilecek veriyi hazırlıyoruz.
         const dto = {
             etkinlikAdi,
             etkinlikAciklamasi,
@@ -85,32 +88,72 @@ const AddEvent = () => {
             seansEkleDtoList: seanslar.map(s => ({ tarih: s.tarih, bitisTarihi: s.bitisTarihi }))
         };
 
-        try {
-            const res = await axios.post('http://localhost:8080/organizatorMainPage/addEvent/save', dto, {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
-            });
-            if (res.data === true) {
-                alert("Etkinlik başarıyla kaydedildi!");
-                // Formu sıfırla
-                setEtkinlikAdi('');
-                setEtkinlikAciklamasi('');
-                setYasSiniri('');
-                setBiletFiyati('');
-                setEtkinlikSuresi('');
-                setKapakFotografi('');
-                setSeanslar([]);
-                setYeniSeans('');
-                setSecilenSehir('');
-                setSecilenSalon('');
-                setSecilenTur('');
-            } else {
-                alert(res.data);
+        // Sinema türü seçildiyse fragman linkini de ekliyoruz.
+        if (etkinlikTurleri.find(tur => tur.etkinlikTurID === Number(secilenTur))?.etkinlikTurAdi === 'Sinema') {
+            if (!fragmanLinki || fragmanLinki.trim() === '') {
+                toast.error("Fragman linki boş olamaz!");
+                return;
             }
-        } catch (error) {
-            console.error('Etkinlik kaydedilemedi', error);
+
+            const sinemaDto = {
+                dto,
+                fragmanLinki
+            };
+            console.log("Gönderilen sinemaDto:", JSON.stringify(sinemaDto));
+            try {
+                const res = await axios.post('http://localhost:8080/organizatorMainPage/addCinema/save', sinemaDto, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                });
+
+                if (res.data === true) {
+                    toast.success("Etkinlik başarıyla kaydedildi!");
+                    // Formu sıfırlama işlemleri
+                    resetForm();
+                } else {
+                    alert(res.data);
+                }
+            } catch (error) {
+                console.error('Sinema etkinliği kaydedilemedi', error);
+            }
+        } else {
+            console.log("Gönderilen dto:", JSON.stringify(dto));
+            // Diğer etkinlik türleri için
+            try {
+                const res = await axios.post('http://localhost:8080/organizatorMainPage/addEvent/save', dto, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                });
+
+                if (res.data === true) {
+                    toast.success("Etkinlik başarıyla kaydedildi!");
+                    // Formu sıfırlama işlemleri
+                    resetForm();
+                } else {
+                    alert(res.data);
+                }
+            } catch (error) {
+                console.error('Etkinlik kaydedilemedi', error);
+            }
         }
+    };
+
+    // Formu sıfırlamak için bir fonksiyon ekleyebiliriz
+    const resetForm = () => {
+        setEtkinlikAdi('');
+        setEtkinlikAciklamasi('');
+        setYasSiniri('');
+        setBiletFiyati('');
+        setEtkinlikSuresi('');
+        setKapakFotografi('');
+        setSeanslar([]);
+        setYeniSeans('');
+        setSecilenSehir('');
+        setSecilenSalon('');
+        setSecilenTur('');
+        setFragmanLinki('');
     };
 
     return (
@@ -244,6 +287,24 @@ const AddEvent = () => {
                                                 </option>
                                             ))}
                                         </select>
+                                    </div>
+                                )}
+
+                                {etkinlikTurleri.find(tur => tur.etkinlikTurID === Number(secilenTur))?.etkinlikTurAdi === 'Sinema' && (
+                                    <div className="etkinlik-form-group">
+                                        <label
+                                            className="etkinlik-form-label"
+                                        >
+                                            Fragman Linki:
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={fragmanLinki}
+                                            onChange={e => setFragmanLinki(e.target.value)}
+                                            required
+                                            className="etkinlik-form-input"
+                                            placeholder="https://..."
+                                        />
                                     </div>
                                 )}
                             </div>

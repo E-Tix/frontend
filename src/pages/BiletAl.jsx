@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import '../components/BiletAl.css';
+import "../components/BiletAl.css";
 
 const BiletAl = ({ seansId, salonId, kullaniciId }) => {
   const [koltuklar, setKoltuklar] = useState([]);

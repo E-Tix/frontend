@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "../components/RegisterUser.css";
 
 const RegisterUser = () => {
@@ -24,27 +25,28 @@ const RegisterUser = () => {
         e.preventDefault();
         // Şifre eşleşme kontrolü
         if (userInfo.sifre !== userInfo.sifreTekrar) {
-            alert("Şifreler eşleşmiyor!");
+            toast.warning("Şifreler eşleşmiyor!");
             return;
         }
 
         // Şifre uzunluğu kontrolü
         if (userInfo.sifre.length < 6) {
-            alert("Şifre en az 6 karakter olmalıdır!");
+            toast.warning("Şifre en az 6 karakter olmalıdır!");
             return;
         }
 
         // Telefon numarası formatı kontrolü
         const phoneRegex = /^\d{10,15}$/;
         if (!phoneRegex.test(userInfo.telNo)) {
-            alert("Telefon numarası geçersiz!");
+            toast.warning("Telefon numarası geçersiz!");
             return;
         }
 
         try {
             await register(userInfo, "Kullanıcı");
+            toast.success("Kayıt başarılı!");
         } catch (err) {
-            alert("Kayıt başarısız!");
+            toast.error("Kayıt başarısız!");
         }
     };
 

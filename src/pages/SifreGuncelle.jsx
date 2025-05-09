@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "../components/SifreGuncelle.css";
 
 const SifreGuncelle = () => {
@@ -17,13 +18,13 @@ const SifreGuncelle = () => {
 
         // Şifre eşleşmesi kontrolü
         if (newPassword !== confirmNewPassword) {
-            setError("Yeni şifreler eşleşmiyor!");
+            toast.warning("Yeni şifreler eşleşmiyor!");
             return;
         }
 
         // Basit şifre doğrulama (örneğin, min 6 karakter)
         if (newPassword.length < 6) {
-            setError("Yeni şifre en az 6 karakter olmalı!");
+            toast.warning("Yeni şifre en az 6 karakter olmalı!");
             return;
         }
 
@@ -44,26 +45,29 @@ const SifreGuncelle = () => {
             })
             .then((response) => {
                 if (response.data === true) {
-                    setSuccess("Şifreniz başarıyla güncellendi!");
-                    setError("");
+                    if (oldPassword === newPassword){
+                        toast.warning("Eski şifre ile yeni şifre aynı olamaz!");
+                    }else{
+                        toast.success("Şifreniz başarıyla güncellendi!");
 
-                    // 2 saniye bekleyip yönlendir (isteğe bağlı)
-                    setTimeout(() => {
-                        if(user?.role === "Kullanıcı"){
-                            navigate("/profil/Kullanıcı"); // profil rotanı buraya yaz
-                        }else if(user?.role === "Organizatör"){
-                            navigate("/profil/Organizatör");
-                        }else{
-                            navigate("/profil/Admin");
-                        }
-                    }, 2000);
+                        // 2 saniye bekleyip yönlendir (isteğe bağlı)
+                        setTimeout(() => {
+                            if(user?.role === "Kullanıcı"){
+                                navigate("/profil/Kullanıcı"); // profil rotanı buraya yaz
+                            }else if(user?.role === "Organizatör"){
+                                navigate("/profil/Organizatör");
+                            }else{
+                                navigate("/profil/Admin");
+                            }
+                        }, 2000);
+                    }
                 } else {
-                setError("Şifre güncellenemedi. Lütfen bilgilerinizi kontrol edin.");
+                toast.error("Eski şifre yanlış. Lütfen bilgilerinizi kontrol edin.");
                 }
             })
             .catch((err) => {
                 console.error(err);
-                setError("Bir hata oluştu. Lütfen tekrar deneyin.");
+                toast.error("Bir hata oluştu. Lütfen tekrar deneyin.");
             });
     };
 
