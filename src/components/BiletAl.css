@@ -18,21 +18,23 @@
   .koltuk-button {
     width: 40px;
     height: 40px;
-    background-color: #ccc;
-    border: none;
-    border-radius: 6px;
+    background-color: rgba(104, 144, 157, 0);
+    border: 2px solid rgba(104, 144, 157, 1);
+    border-radius: 12px;
     cursor: pointer;
-    color: #333;
+    color: white;
     font-weight: bold;
     transition: background-color 0.3s ease;
   }
 
   .koltuk-button:hover {
-    background-color: #bbb;
+    background-color:  rgba(255, 157, 0, 1);
+    border: 2px solid rgba(255, 157, 0, 1);
   }
 
   .koltuk-button.secili {
     background-color: green;
+    border: 2px solid green;
     color: white;
   }
 
@@ -61,4 +63,10 @@
   .buton:disabled {
     background-color: gray;
     cursor: not-allowed;
+  }
+
+  .koltuk-button.dolu {
+    background-color: rgba(104, 144, 157, 1); /* Gri */
+    cursor: not-allowed;
+    border: 2px solid rgba(104, 144, 157, 1);
   }

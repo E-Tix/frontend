@@ -35,6 +35,7 @@ const BiletAl = () => {
         ]);
         setKoltuklar(koltukRes.data);
         setDoluKoltuklar(doluRes.data);
+        console.log("Dolu koltuklar:", doluRes.data);
       } catch (err) {
         console.error("Koltuk verileri alınamadı", err);
       }
@@ -45,7 +46,7 @@ const BiletAl = () => {
 
   // Bu koltuk dolu mu?
   const isDolu = (koltukID) =>
-    doluKoltuklar.some(k => k.koltukID === koltukID && k.doluMu);
+    doluKoltuklar.some(k => k.koltukId === koltukID && k.doluMu);
 
   // Seçimi değiştir
   const toggleKoltukSec = (koltuk) => {
@@ -93,7 +94,6 @@ const BiletAl = () => {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       setDoluKoltuklar(res.data);
-
     } catch (err) {
       alert("Bilet alınırken bir hata oluştu.");
       console.error(err);
