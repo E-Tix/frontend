@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "../api/axios.js";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "../components/Etkinlik.css";
 
 const Etkinlik = () => {
   const { eventId } = useParams();
@@ -28,8 +29,8 @@ const Etkinlik = () => {
     return <div className="event-loading">Yükleniyor...</div>;
   }
 
-  const handleSalonSeansClick = (seansId) => {
-    navigate(`/koltuk-secimi/${seansId}`);
+  const handleSalonSeansClick = (seansId, salonId) => {
+    navigate(`/bilet-al/${seansId}/${salonId}/${etkinlik.etkinlikID}`);
   };
 
   return (
@@ -74,7 +75,7 @@ const Etkinlik = () => {
               </p>
             </div>
             <button
-              onClick={() => handleSalonSeansClick(salonSeans.seans.seansID)}
+              onClick={() => handleSalonSeansClick(salonSeans.seans.seansID, salonSeans.salon.salonID)}
               className="seat-selection-btn"
             >
               Koltuk Seç

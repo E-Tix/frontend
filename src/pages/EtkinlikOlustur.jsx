@@ -96,7 +96,7 @@ const AddEvent = () => {
             }
 
             const sinemaDto = {
-                dto,
+                etkinlikEkleDto: dto,
                 fragmanLinki
             };
             console.log("Gönderilen sinemaDto:", JSON.stringify(sinemaDto));

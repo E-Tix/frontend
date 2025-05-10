@@ -7,11 +7,6 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import { CityProvider } from "./context/CityContext";
 import MainLayout from "./layouts/MainLayout";  // MainLayout'ı import ettik
 import LoginLayout from "./layouts/LoginLayout";
-import Sinema from "./pages/Sinema";
-import Bale from "./pages/Bale";
-import Tiyatro from "./pages/Tiyatro";
-import Konferans from "./pages/Konferans";
-import Spor from "./pages/Spor";
 import ChooseRole from "./pages/ChooseRole";
 import Login from "./pages/Login";
 import ChooseRegisterRole from "./pages/ChooseRegisterRole";
@@ -29,6 +24,8 @@ import Etkinliklerim from "./pages/Etkinliklerim";
 import EtkinlikOlustur from "./pages/EtkinlikOlustur";
 import Etkinlik from "./pages/Etkinlik"
 import BiletAl from "./pages/BiletAl"
+import PaymentSuccess from "./pages/PaymentSuccess"
+import EtkinlikTurSayfasi from "./pages/EtkinlikTurSayfasi"
 
 function App() {
   return (
@@ -57,18 +54,14 @@ function App() {
                   <Route path="/etkinlik/:eventId" element={<Etkinlik />} />
                   <Route path="/etkinliklerim" element={<Etkinliklerim />} />
                   <Route path="/etkinlik-olustur" element={<EtkinlikOlustur />} />
-                  <Route path="etkinlikler/sinema" element={<Sinema />} />
-                  <Route path="etkinlikler/bale" element={<Bale />} />
-                  <Route path="etkinlikler/tiyatro" element={<Tiyatro />} />
-                  <Route path="etkinlikler/konferans" element={<Konferans />} />
-                  <Route path="etkinlikler/spor" element={<Spor />} />
+                  <Route path="etkinlikler/:tur" element={<EtkinlikTurSayfasi />} />
 
-                  <Route path="/koltuk-secimi/:seansId" element={<BiletAl />} />
+                  <Route path="/bilet-al/:seansId/:salonId/:etkinlikId" element={<BiletAl />} />
                   <Route path="/profil" element={<ProfileRedirect />} />
                   <Route path="/profil/Kullanıcı" element={<KullanıcıProfil />} />
                   <Route path="/profil/Organizatör" element={<OrganizatorProfil />} />
                   <Route path="/profil/Admin" element={<AdminProfil />} />
-
+                  <Route path="/payment" element={<PaymentSuccess />} />
 
                 </Route>
               </Routes>

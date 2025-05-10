@@ -1,0 +1,16 @@
+.etkinlik-tur-sayfasi {
+  padding: 2rem;
+  background-color: #f9f9f9;
+}
+
+.etkinlik-tur-baslik {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.etkinlikler-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
