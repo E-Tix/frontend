@@ -2,10 +2,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
-import { Plus, Trash2, Edit3, XCircle } from "lucide-react"; // İkonlar eklendi
+import { Plus, Trash2, Edit3, XCircle, Film, VenetianMask } from "lucide-react"; // İkonlar eklendi
 import '../components/OrganizatorHomePage.css';
 import Modal from 'react-modal';
-import { toast } from 'react-toastify'; // Toast mesajları için
+import { toast } from 'react-toastify';
 
 const OrganizatorHomePage = () => {
     const [etkinlikler, setEtkinlikler] = useState([]);
@@ -30,6 +30,7 @@ const OrganizatorHomePage = () => {
             });
             if (response.data && response.data.content) {
                 setEtkinlikler(response.data.content);
+                console.log("Yüklenen etkinlikler:", response.data.content); // Gelen veriyi kontrol et
             } else {
                 setEtkinlikler([]); // Beklenmedik yanıt formatı
             }
@@ -47,120 +48,87 @@ const OrganizatorHomePage = () => {
         fetchEtkinlikler();
     }, [fetchEtkinlikler]);
 
-    const fetchEtkinlikDetay = async (etkinlikId, etkinlikTuru) => { // Parametreleri değiştirdik
-        if (!etkinlikId) return;
-        setIsDetayLoading(true);
-        setEtkinlikDetay(null); // Önceki detayı temizle
-        try {
-            let endpoint = '';
-            // selectedEtkinlik.etkinlikTuru burada henüz set edilmemiş olabilir.
-            // Ana listeden gelen etkinlik objesinde etkinlik türü bilgisi olmalı.
-            // Şimdilik, openModal'a tıklanan kartın verisinden etkinlik türünü alacağız.
-            // Ancak backend'den gelen EtkinlikForOrgDto'da etkinlikTuru alanı yok. Bu bir sorun.
-            // Backend / endpoint'i EtkinlikForOrgDto dönerken tür bilgisini de eklemeli.
-            // GEÇİCİ VARSAYIM: selectedEtkinlik.etkinlikTuru dolu olacak veya etkinlikTuru parametresi kullanılacak.
-
-            // Backend'den gelen `EtkinlikForOrgDto` içinde etkinlik türü bilgisi olmadığı için
-            // tıklanan kartın `etkinlik.id`'sini ve bir şekilde türünü bilmemiz gerekiyor.
-            // Eğer `etkinlik.id` Sinema ise farklı, değilse farklı.
-            // Bu bilgiye `OrganizatorHomePage`'deki `etkinlikler` listesindeki objeden ulaşamıyoruz.
-            // Bu büyük bir eksiklik. Şimdilik bir TRY-CATCH ile önce birini deneyip olmazsa diğerini deneyebiliriz
-            // ya da `selectedEtkinlik`'e `etkinlikTuru` diye bir alan manuel eklememiz lazım.
-
-            // ---- EN İYİ ÇÖZÜM: Backend / endpoint'i EtkinlikForOrgDto'ya etkinlikTur alanı eklemeli. ----
-            // Şimdilik, frontend'de bir ayrım yapamıyoruz. Sadece genel endpoint'i deneyelim.
-            // Eğer backend'de `/getEtkinlik/{id}` ve `/getCinema?sinemaId={id}` farklı DTO'lar dönüyorsa
-            // ve bu DTO'ların yapısı EtkinlikOlustur'a gönderilecek etkinlikData için önemliyse bu ayrım şart.
-
-            // Varsayım: `etkinlikTuru` parametresi `openModal` çağrılırken doğru şekilde sağlanıyor.
-            // Ya da, `selectedEtkinlik` objesine (ana listeden gelen) `etkinlikTuruAdi` gibi bir alan backend tarafından eklenmeli.
-            // Biz `selectedEtkinlik` üzerinden gidelim ve `etkinlikTuru` diye bir alan bekleyelim.
-
-            console.log("Detay için seçilen etkinlik:", selectedEtkinlik);
-            console.log("Parametre olarak gelen etkinlikTuru:", etkinlikTuru);
-
-
-            // ETKİNLİK TÜRÜ AYRIMI İÇİN BACKEND GÜNCELLEMESİ GEREKİYOR
-            // Şimdilik, gelen `etkinlikTuru` parametresine (eğer varsa) veya `selectedEtkinlik.etkinlikTurAdi` gibi bir alana güveneceğiz.
-            // `etkinlikler` listesindeki objelerde `etkinlikTurAdi` alanı OLMADIĞINDAN bu kısım sorunlu.
-            // `OrganizatorLandingService.getEtkinlikler` metodunun döndürdüğü `EtkinlikForOrgDto`'ya
-            // `etkinlikTurAdi` veya `isSinema` gibi bir boolean alan eklenmeli.
-
-            // ---- GEÇİCİ ÇÖZÜM (Backend güncellenene kadar çok güvenilir değil) ----
-            // Backend'den gelen EtkinlikForOrgDto'da etkinlik türü bilgisi yok.
-            // Bu yüzden modal açılırken hangi endpoint'i çağıracağımızı bilemiyoruz.
-            // Bu KISIM ŞU AN DOĞRU ÇALIŞMAYACAKTIR.
-            // Manuel olarak bir etkinlik türü belirlememiz gerekiyor ya da backend'i güncellememiz.
-            // `etkinlik.id` üzerinden her iki endpoint'i de denemek kötü bir pratik olur.
-
-            // ---- DÜZELTİLMESİ GEREKEN YER ----
-            // Varsayalım ki `selectedEtkinlik.isSinema` diye bir alan backend'den geliyor (İDEAL DURUM)
-            // if (selectedEtkinlik.isSinema) {
-            // VEYA `etkinlikTuru` parametresini kullanalım (eğer `openModal`'a eklersek)
-            if (etkinlikTuru === "Sinema") { // Bu "Sinema" string'i backend'deki tür adıyla eşleşmeli
-                endpoint = `http://localhost:8080/organizatorMainPage/getCinema?sinemaId=${etkinlikId}`;
-            } else {
-                endpoint = `http://localhost:8080/organizatorMainPage/getEtkinlik/${etkinlikId}`;
+    const fetchEtkinlikDetay = async (idToUse, etkinlikTurAdi) => {
+            // idToUse artık sinemalar için doğru sinemaId'yi, diğerleri için etkinlikId'yi içermeli
+            if (typeof idToUse === 'undefined' || idToUse === null || !etkinlikTurAdi) {
+                toast.error("Etkinlik ID veya türü eksik, detaylar yüklenemiyor.");
+                console.error("fetchEtkinlikDetay HATA: idToUse veya etkinlikTurAdi eksik.", { idToUse, etkinlikTurAdi });
+                setEtkinlikDetay(null); // Detayı temizle
+                setIsDetayLoading(false);
+                return;
             }
-            console.log("Detay için endpoint:", endpoint);
+            // ... (geri kalan kodunuz aynı, endpoint seçimi doğru ID (idToUse) ile yapılacak)
+            setIsDetayLoading(true);
+            setEtkinlikDetay(null);
+            try {
+                let endpoint = '';
+                if (etkinlikTurAdi.toLowerCase() === "sinema") {
+                    endpoint = `http://localhost:8080/organizatorMainPage/getCinema?sinemaId=${idToUse}`;
+                } else {
+                    endpoint = `http://localhost:8080/organizatorMainPage/getEtkinlik/${idToUse}`;
+                }
+                console.log("Detay için endpoint:", endpoint); // Bu logu kontrol edin!
 
-            const response = await axios.get(endpoint, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            setEtkinlikDetay(response.data);
-            console.log("Yüklenen Etkinlik Detayı:", response.data);
-
-        } catch (err) {
-            console.error('Etkinlik detayları alınamadı:', err);
-            toast.error('Etkinlik detayları yüklenirken bir sorun oluştu.');
-            // Eğer bir endpoint hata verirse diğerini denemek (çok kötü bir pattern ama geçici):
-            // Bu kısım ciddi şekilde refactor edilmeli veya backend güncellenmeli.
-            // if (err.response && (etkinlikTuru !== "Sinema")) { // Eğer ilk deneme normal etkinliktiyse ve hata verdiyse, sinemayı dene
-            //     try {
-            //         const altEndpoint = `http://localhost:8080/organizatorMainPage/getCinema?sinemaId=${etkinlikId}`;
-            //         const altResponse = await axios.get(altEndpoint, { headers: { Authorization: `Bearer ${token}` } });
-            //         setEtkinlikDetay(altResponse.data);
-            //         setSelectedEtkinlik(prev => ({...prev, actualEtkinlikTuru: "Sinema"})); // Gerçek türü kaydet
-            //     } catch (altErr) {
-            //         console.error('Alternatif etkinlik detayı da alınamadı:', altErr);
-            //     }
-            // }
-        } finally {
-            setIsDetayLoading(false);
-        }
-    };
+                const response = await axios.get(endpoint, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setEtkinlikDetay(response.data);
+                console.log("Yüklenen Etkinlik Detayı:", response.data);
+            } catch (err) {
+                console.error('Etkinlik detayları alınamadı:', err.response?.data || err.message);
+                toast.error(err.response?.data?.message || 'Etkinlik detayları yüklenirken bir sorun oluştu.');
+                setEtkinlikDetay(null);
+            } finally {
+                setIsDetayLoading(false);
+            }
+        };
 
 
     const openModal = (etkinlik) => {
-        // ETKİNLİK TÜRÜ SORUNU: `etkinlik` objesinde (EtkinlikForOrgDto'dan gelen) tür bilgisi yok.
-        // Bu yüzden fetchEtkinlikDetay hangi endpoint'i çağıracağını bilemez.
-        // Geçici olarak, tüm etkinliklerin "Normal" olduğunu varsayalım veya
-        // `etkinlik.id`'si üzerinden bir mantık kurmaya çalışalım (önerilmez).
-        // İDEAL: `etkinlik` objesi `etkinlikTuruAdi` veya `isSinema` gibi bir alan içermeli.
-        setSelectedEtkinlik(etkinlik); // id, etkinlikAdi, kapakFotografi, yasSiniri, etkinlikSuresi var. TÜR YOK!
+            // 1. Temel veri kontrolü (etkinlik, id ve etkinlikTurAdi olmalı)
+            if (!etkinlik || typeof etkinlik.id === 'undefined' || !etkinlik.etkinlikTurAdi) {
+                console.error("openModal HATA: Etkinlik objesi eksik veya bozuk!", JSON.stringify(etkinlik, null, 2));
+                toast.error("Etkinlik detayları açılamıyor: Temel etkinlik verisi eksik veya hatalı.");
+                return;
+            }
+            console.log("openModal çağrıldı, gelen etkinlik:", JSON.stringify(etkinlik, null, 2));
+            setSelectedEtkinlik(etkinlik);
 
-        // ---- BACKEND GÜNCELLEMESİ GEREKLİ ----
-        // Şimdilik türü "Bilinmiyor" olarak yollayalım veya fetchEtkinlikDetay içinde zor bir mantık kuralım.
-        // `WorkspaceEtkinlikDetay` fonksiyonu bu haliyle doğru çalışmayacak.
-        // Bu sorunu çözmek için `EtkinlikForOrgDto`'ya backend'de `etkinlikTurAdi` eklenmeli.
-        // O zamana kadar, fetchEtkinlikDetay içinde iki endpoint'i de deneme gibi kötü bir yola başvurulabilir
-        // ya da kullanıcıya tür seçtirilebilir (ki bu anlamsız olur).
-        // Şimdilik, fetchEtkinlikDetay'ı tüm etkinlikler normalmiş gibi çağıralım,
-        // sinema detayı gelmeyecektir veya hata verecektir.
-        // VEYA etkinlik objesine manuel bir özellik ekleyebiliriz (test için)
-        // const etkinlikTuruForDetay = etkinlik.etkinlikAdi.toLowerCase().includes("sinema") ? "Sinema" : "Normal";
-        // fetchEtkinlikDetay(etkinlik.id, etkinlikTuruForDetay);
+            let idForDetailFetch = etkinlik.id; // Varsayılan olarak ana etkinlik ID'si
+            const isSinemaEvent = etkinlik.etkinlikTurAdi.toLowerCase() === "sinema";
 
-        // Şimdilik, etkinlik türünü manuel olarak gönderemiyoruz, çünkü bilmiyoruz.
-        // fetchEtkinlikDetay fonksiyonu `selectedEtkinlik` üzerinden bir çıkarım yapmaya çalışacak
-        // veya default bir endpoint kullanacak. Bu kısım DÜZELTİLMELİ.
-        // Geçici olarak, etkinlik ID'sini yollayalım, fetchEtkinlikDetay içinde bir endpoint'i default seçsin.
-        // Bu, sinema detaylarının yüklenmemesine neden olabilir.
-        fetchEtkinlikDetay(etkinlik.id, "Normal"); // GEÇİCİ: Türü "Normal" varsayıyoruz. SİNEMALAR İÇİN YANLIŞ ÇALIŞIR.
-                                                  // EtkinlikForOrgDto'ya etkinlikTurAdi eklenmeli.
+            if (isSinemaEvent) {
+                if (typeof etkinlik.sinemaId !== 'undefined' && etkinlik.sinemaId !== null) {
+                    // Backend'den EtkinlikForOrgDto içinde sinemaId (SinemaEntity'nin ID'si) geliyorsa onu kullan
+                    idForDetailFetch = etkinlik.sinemaId;
+                    console.log(`openModal (SİNEMA): fetchEtkinlikDetay için sinemaId (${idForDetailFetch}) kullanılacak.`);
+                } else {
+                    // EĞER EtkinlikForOrgDto'da sinemaId alanı yoksa veya null ise:
+                    console.error("openModal HATA (SİNEMA): EtkinlikForOrgDto'dan beklenen 'sinemaId' alanı gelmedi veya null!", JSON.stringify(etkinlik, null, 2));
+                    toast.error("Sinema etkinliği için gerekli Sinema ID'si bulunamadı. Detaylar yüklenemeyebilir.");
+                    // Bu durumda modal açılsa bile doğru detaylar yüklenemez.
+                    // Kullanıcıya bilgi vermek ve belki de fetchEtkinlikDetay'ı çağırmamak daha iyi olabilir.
+                    // Şimdilik, eğer sinemaId yoksa ana etkinlik.id ile devam etmesine izin veriyoruz,
+                    // bu da fetchEtkinlikDetay'ın /getCinema'ya yanlış ID ile gitmesine neden olacak.
+                    // İdeal olan, burada fetchEtkinlikDetay'ı çağırmadan modalda bir uyarı göstermektir.
+                    // Ya da aşağıdaki fetchEtkinlikDetay çağrısını bir if bloğuna alıp, sinemaId yoksa çağırmamaktır.
+                    // Örneğin:
+                    // if (isSinemaEvent && (!etkinlik.sinemaId)) {
+                    //     setIsModalOpen(true); // Modal açılır ama detaylar için yükleme olmaz
+                    //     setEtkinlikDetay(null);
+                    //     setIsDetayLoading(false);
+                    //     return;
+                    // }
+                }
+            } else {
+                console.log(`openModal (DİĞER): fetchEtkinlikDetay için etkinlik.id (${idForDetailFetch}) kullanılacak.`);
+            }
 
-        setIsModalOpen(true);
-    };
+            // fetchEtkinlikDetay çağrılırken doğru ID ve tür gönderilmeli
+            fetchEtkinlikDetay(idForDetailFetch, etkinlik.etkinlikTurAdi);
+            setIsModalOpen(true);
+        };
+
 
     const closeModal = () => {
         setIsModalOpen(false);
@@ -173,106 +141,62 @@ const OrganizatorHomePage = () => {
             toast.error("Güncellenecek etkinlik detayı bulunamadı.");
             return;
         }
-        // Etkinlik türünü etkinlikDetay'dan almamız lazım.
-        // etkinlikDetay.etkinlikTur.etkinlikTurAdi veya etkinlikDetay.sinemaId gibi.
-        const isSinema = !!etkinlikDetay.sinemaId; // Eğer SinemaForOrgDetayDto ise sinemaId olacak
-                                                 // EtkinlikForOrgDetayDto ise etkinlikDetay.etkinlikTur.etkinlikTurAdi
-
         navigate("/etkinlik-olustur", {
             state: {
                 editMode: true,
-                etkinlikData: etkinlikDetay, // Bu etkinlikDetay, SinemaForOrgDetayDto veya EtkinlikForOrgDetayDto olmalı
-                // EtkinlikOlustur.jsx bu iki farklı DTO yapısını da handle edebilmeli (isSinema bilgisiyle)
+                etkinlikData: etkinlikDetay,
             }
         });
         closeModal();
     };
 
     const handleDelete = async () => {
-        if (!selectedEtkinlik || !selectedEtkinlik.id) {
-            toast.error("Silinecek etkinlik bulunamadı.");
-            return;
-        }
-
-        // ETKİNLİK TÜRÜ SORUNU: Silme için de türü bilmemiz gerekiyor.
-        // `selectedEtkinlik` (EtkinlikForOrgDto'dan gelen) tür bilgisini içermiyor.
-        // `etkinlikDetay` yüklendiyse oradan alabiliriz.
-        let isSinemaEvent = false;
-        let eventIdToDelete = selectedEtkinlik.id;
-
-        if (etkinlikDetay) { // Detay yüklendiyse oradan türü al
-            isSinemaEvent = !!etkinlikDetay.sinemaId; // SinemaForOrgDetayDto ise sinemaId olacak
-            if (isSinemaEvent && etkinlikDetay.sinemaId) {
-                 // Normalde sinema silerken sinemaId kullanılır, etkinlikId değil.
-                 // Backend /deleteCinema?sinemaId={id} bekliyor.
-                 // Backend /deleteEvent/{eventId} bekliyor.
-                 // `selectedEtkinlik.id` ana etkinlik ID'si mi sinema ID'si mi?
-                 // Ana listedeki `etkinlik.id` alanı EtkinlikForOrgDto'dan geliyor, bu ana etkinlik ID'si (`etkinlikID`).
-                 // Sinema ise `sinemaId`'yi `etkinlikDetay`'dan almamız lazım.
-
-                // Eğer etkinlikDetay.sinemaId varsa, bu bir sinema etkinliğidir.
-                // Backend /deleteCinema endpoint'i sinemaId bekler.
-                // selectedEtkinlik.id, EtkinlikForOrgDto'dan gelen etkinlikID'dir.
-                // Eğer sinema ise, silme işlemi için sinemaId'ye ihtiyacımız var.
-                // Bu durumda `etkinlikDetay.sinemaId`'yi kullanmalıyız.
-                if (etkinlikDetay.sinemaId) {
-                    eventIdToDelete = etkinlikDetay.sinemaId; // Silme için sinema ID'sini kullan
-                } else {
-                    // Bu durum olmamalı, SinemaForOrgDetayDto'da sinemaId olmalı.
-                    toast.error("Sinema ID'si bulunamadı, silme işlemi yapılamıyor.");
-                    return;
-                }
+            if (!selectedEtkinlik || typeof selectedEtkinlik.id === 'undefined' || !selectedEtkinlik.etkinlikTurAdi) {
+                toast.error("Silinecek etkinlik veya etkinlik türü bilgisi bulunamadı.");
+                return;
             }
-        } else {
-            // Detay yüklenmediyse, türü tahmin etmek zor.
-            // Bu ciddi bir sorun. Kullanıcıya sorulabilir veya varsayım yapılabilir (önerilmez).
-            // **ÇÖZÜM:** `EtkinlikForOrgDto`'ya `isSinema` veya `etkinlikTuruAdi` eklenmeli.
-            // Şimdilik, silme işlemini sadece normal etkinlikler için çalışacakmış gibi yapalım
-            // veya kullanıcıya sormayı deneyelim (kötü UX).
-            toast.warn("Etkinlik türü belirlenemedi. Silme işlemi riskli olabilir. Lütfen etkinliği tekrar açıp silmeyi deneyin.");
-            // Veya en azından bir endpoint'i deneyelim.
-            // isSinemaEvent = selectedEtkinlik.etkinlikAdi.toLowerCase().includes("sinema"); // Çok zayıf bir tahmin
-            // console.warn("Etkinlik türü tahmin ediliyor, bu güvenilir değil:", isSinemaEvent);
-            // Eğer türü bilemiyorsak, silme işlemini yapmamak en iyisi.
-            // Ama isteğiniz silme olduğu için birini deneyeceğiz.
-            // KULLANICIDAN ONAY ALIRKEN TÜRÜ DE BELİRTEBİLİRİZ.
-             const confirmDelete = window.confirm(
-                `"${selectedEtkinlik.etkinlikAdi}" etkinliğini silmek istediğinize emin misiniz? ` +
-                `Bu işlem geri alınamaz. (Tür belirlenemedi, normal etkinlik olarak silinmeye çalışılacak.)`
-            );
-            if (!confirmDelete) return;
-            // isSinemaEvent false kalacak, /deleteEvent çağrılacak. Sinema ise hata verir.
-        }
+            // selectedEtkinlik, EtkinlikForOrgDto'dan geliyor ve 'sinemaId' alanını içermeli.
+            const { id: anaEtkinlikId, etkinlikAdi, etkinlikTurAdi, sinemaId: dtoSinemaId } = selectedEtkinlik;
 
+            let endpoint = '';
+            let idToDelete;
+            const isSinemaEvent = etkinlikTurAdi.toLowerCase() === "sinema";
 
-        const endpoint = isSinemaEvent
-            ? `http://localhost:8080/organizatorMainPage/deleteCinema?sinemaId=${eventIdToDelete}`
-            : `http://localhost:8080/organizatorMainPage/deleteEvent/${selectedEtkinlik.id}`; // Normal etkinlik için selectedEtkinlik.id (ana etkinlik ID)
+            if (isSinemaEvent) {
+                if (typeof dtoSinemaId !== 'undefined' && dtoSinemaId !== null) { // EtkinlikForOrgDto'dan gelen sinemaId'yi kullan
+                    idToDelete = dtoSinemaId;
+                    endpoint = `http://localhost:8080/organizatorMainPage/deleteCinema?sinemaId=${idToDelete}`;
+                    console.log(`handleDelete (SİNEMA): Endpoint: ${endpoint}, Silinecek Sinema ID: ${idToDelete}`);
+                } else {
+                    toast.error("Silinecek sinema etkinliği için Sinema ID bulunamadı. Backend DTO'sunu kontrol edin.");
+                    console.error("handleDelete HATA (SİNEMA): selectedEtkinlik.sinemaId eksik veya null!", selectedEtkinlik);
+                    // Sinema silme için etkinlikDetay.sinemaId'ye güvenmek yerine doğrudan DTO'dan almalıyız.
+                    // Eğer DTO'da yoksa, silme işlemi yapılamaz.
+                    return; // Silme işlemini yapma
+                }
+            } else {
+                idToDelete = anaEtkinlikId;
+                endpoint = `http://localhost:8080/organizatorMainPage/deleteEvent/${idToDelete}`;
+                console.log(`handleDelete (DİĞER): Endpoint: ${endpoint}, Silinecek Etkinlik ID: ${idToDelete}`);
+            }
 
-        if (isSinemaEvent && !etkinlikDetay?.sinemaId) {
-            toast.error("Sinema etkinliği silinemedi: Sinema ID'si bulunamadı. Lütfen etkinliği modalda açıp tekrar deneyin.");
-            return;
-        }
+            const confirmMessage = `"${etkinlikAdi}" adlı ${etkinlikTurAdi} etkinliğini silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`;
+            if (!window.confirm(confirmMessage)) {
+                return;
+            }
 
-        if (!isSinemaEvent && !window.confirm(`"${selectedEtkinlik.etkinlikAdi}" adlı NORMAL etkinliği silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`)) return;
-        if (isSinemaEvent && !window.confirm(`"${etkinlikDetay?.etkinlikAdi || selectedEtkinlik.etkinlikAdi}" adlı SİNEMA etkinliğini (${eventIdToDelete}) silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`)) return;
-
-
-        console.log("Silme endpoint:", endpoint);
-        console.log("Silinecek ID (sinema ise sinemaId, değilse etkinlikId):", isSinemaEvent ? eventIdToDelete : selectedEtkinlik.id);
-
-        try {
-            await axios.delete(endpoint, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            toast.success(`"${selectedEtkinlik.etkinlikAdi}" etkinliği başarıyla silindi.`);
-            setEtkinlikler(prevEtkinlikler => prevEtkinlikler.filter(e => e.id !== selectedEtkinlik.id));
-            closeModal();
-        } catch (err) {
-            console.error('Etkinlik silinemedi:', err.response?.data || err.message);
-            toast.error(err.response?.data?.message || `Etkinlik silinirken bir hata oluştu: ${err.message}`);
-        }
-    };
+            try {
+                await axios.delete(endpoint, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                toast.success(`"${etkinlikAdi}" etkinliği başarıyla silindi.`);
+                setEtkinlikler(prevEtkinlikler => prevEtkinlikler.filter(e => e.id !== anaEtkinlikId));
+                closeModal();
+            } catch (err) {
+                console.error('Etkinlik silinemedi:', err.response?.data || err.message);
+                toast.error(err.response?.data?.message || `Etkinlik silinirken bir hata oluştu.`);
+            }
+        };
 
 
     if (isLoading) {
@@ -295,19 +219,24 @@ const OrganizatorHomePage = () => {
             <div className="etkinlikler-container">
                 {etkinlikler.map(etkinlik => (
                     <div key={etkinlik.id} className="etkinlik-kart" onClick={() => openModal(etkinlik)}>
+                        <div className="etkinlik-kart-header">
+                            <span className={`etkinlik-turu-badge ${etkinlik.etkinlikTurAdi?.toLowerCase()}`}>
+                                {etkinlik.etkinlikTurAdi?.toLowerCase() === "sinema" ? <Film size={16}/> : <VenetianMask size={16}/>}
+                                {etkinlik.etkinlikTurAdi || "Belirsiz"}
+                            </span>
+                            {etkinlik.yasSiniri > 0 && <span className="yas-siniri">{etkinlik.yasSiniri}+ </span>}
+                        </div>
                         <div className="kapak-container">
                             <img
-                                src={etkinlik.kapakFotografi || 'https://via.placeholder.com/300x200?text=Afiş Yok'}
+                                src={etkinlik.kapakFotografi || 'https://via.placeholder.com/300x200?text=Afiş+Yok'}
                                 alt={etkinlik.etkinlikAdi}
                                 className="kapak-fotografi"
-                                onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/300x200?text=Afiş Hatalı'; }}
+                                onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/300x200?text=Afiş+Hatalı'; }}
                             />
-                            {etkinlik.yasSiniri > 0 && <span className="yas-siniri">{etkinlik.yasSiniri}+ </span>}
                         </div>
                         <div className="etkinlik-kart-bilgi">
                             <h3>{etkinlik.etkinlikAdi}</h3>
-                            {etkinlik.etkinlikSuresi > 0 && <p>Süre: {etkinlik.etkinlikSuresi} dk</p>}
-                            {/* EtkinlikForOrgDto'da tarih bilgisi de olsaydı (örn: ilk seans tarihi) gösterilebilirdi */}
+                            {etkinlik.etkinlikSuresi > 0 && <p className="sure">Süre: {etkinlik.etkinlikSuresi} dk</p>}
                         </div>
                     </div>
                 ))}
@@ -325,30 +254,8 @@ const OrganizatorHomePage = () => {
                 isOpen={isModalOpen}
                 onRequestClose={closeModal}
                 contentLabel="Etkinlik Detayları"
-                //className="ReactModal__Content"
-                //overlayClassName="ReactModal__Overlay"
-                style={{ // Temel görünürlük için inline stil
-                    overlay: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                        zIndex: 1,
-                    },
-                    content: {
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '80%',
-                        height: 'auto',
-                        border: '1px solid #ccc',
-                        background: '#fff',
-                        overflow: 'auto',
-                        WebkitOverflowScrolling: 'touch',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        padding: '20px',
-                        zIndex: 2,
-                    }
-                }}
+                className="modal-content" // CSS'te stil verilecek
+                overlayClassName="modal-overlay" // CSS'te stil verilecek
             >
                 {isDetayLoading && <div className="modal-loading">Detaylar yükleniyor...</div>}
                 {!isDetayLoading && etkinlikDetay && selectedEtkinlik && (
@@ -356,77 +263,116 @@ const OrganizatorHomePage = () => {
                         <button onClick={closeModal} className="modal-close-button" aria-label="Kapat">
                             <XCircle size={24} />
                         </button>
-                        <div className="modal-header">
-                            <h2>{etkinlikDetay.etkinlikAdi || selectedEtkinlik.etkinlikAdi}</h2>
-                            {etkinlikDetay.kapakFotografi && ( // Detayda kapak fotoğrafı varsa göster
-                                <img src={etkinlikDetay.kapakFotografi} alt={etkinlikDetay.etkinlikAdi} className="modal-kapak-fotografi" />
-                            )}
-                        </div>
 
-                        <div className="modal-body">
-                            <p><strong>Açıklama:</strong> {etkinlikDetay.etkinlikAciklamasi}</p>
-                            <p><strong>Bilet Fiyatı:</strong> {etkinlikDetay.biletFiyati} TL</p>
-                            <p><strong>Süre:</strong> {etkinlikDetay.etkinlikSuresi} dakika</p>
-                            <p><strong>Yaş Sınırı:</strong> {etkinlikDetay.yasSiniri}+</p>
-                            {etkinlikDetay.etkinlikTur && <p><strong>Tür:</strong> {etkinlikDetay.etkinlikTur.etkinlikTurAdi}</p>}
-                            {etkinlikDetay.sinemaId && etkinlikDetay.imdbPuani > 0 && <p><strong>IMDb Puanı:</strong> {etkinlikDetay.imdbPuani}</p>}
-                            {etkinlikDetay.sinemaId && etkinlikDetay.fragmanLinki && (
-                                <p><strong>Fragman:</strong> <a href={etkinlikDetay.fragmanLinki} target="_blank" rel="noopener noreferrer">İzle</a></p>
-                            )}
+                        {(() => {
+                            // Gösterilecek etkinlik bilgilerini belirle
+                            // selectedEtkinlik, EtkinlikForOrgDto'dan gelen ve tür bilgisini içeren obje
+                            // etkinlikDetay ise /getEtkinlik veya /getCinema'dan dönen detay objesi
+                            const isSinema = selectedEtkinlik.etkinlikTurAdi?.toLowerCase() === "sinema";
 
-                            {/* Şehir bilgisi artık etkinlikSalonSeansEntities içindeki etkinlik.sehir'den değil, doğrudan etkinlikDetay.sehir'den gelmeli (eğer DTO güncellenirse)*/}
-                            {etkinlikDetay.etkinlikSalonSeansEntities?.[0]?.etkinlik?.sehir &&
-                                <p><strong>Şehir:</strong> {etkinlikDetay.etkinlikSalonSeansEntities[0].etkinlik.sehir.sehirAdi}</p>
+                            // Eğer sinema ise ve etkinlikDetay.etkinlikForOrgDetayDto varsa onu kullan,
+                            // değilse (veya normal etkinlikse) doğrudan etkinlikDetay'ı kullan.
+                            const gosterilecekEtkinlikBilgileri = isSinema && etkinlikDetay.etkinlikForOrgDetayDto
+                                ? etkinlikDetay.etkinlikForOrgDetayDto
+                                : etkinlikDetay;
+
+                            // Sinemaya özel ana seviye bilgiler (fragman, imdb) için doğrudan etkinlikDetay kullanılır.
+                            // Ama DTO yapımız zaten etkinlikForOrgDetayDto'yu içeriyor, o yüzden
+                            // modal başlığı gibi yerlerde selectedEtkinlik'ten gelen adı kullanmak daha tutarlı olabilir.
+
+                            if (!gosterilecekEtkinlikBilgileri || typeof gosterilecekEtkinlikBilgileri.etkinlikID === 'undefined') {
+                                // Bu durum, sinema için etkinlikForOrgDetayDto'nun gelmediği veya
+                                // normal etkinlik için detayların düzgün yüklenmediği anlamına gelir.
+                                return (
+                                    <div className="modal-error">
+                                        Etkinlik detayları tam olarak yüklenemedi. Veri yapısı beklenenden farklı.
+                                    </div>
+                                );
                             }
 
+                            return (
+                                <>
+                                    <div className="modal-header">
+                                        <h2>{selectedEtkinlik.etkinlikAdi} ({selectedEtkinlik.etkinlikTurAdi})</h2>
+                                        {(gosterilecekEtkinlikBilgileri.kapakFotografi || selectedEtkinlik.kapakFotografi) && (
+                                            <img
+                                                src={gosterilecekEtkinlikBilgileri.kapakFotografi || selectedEtkinlik.kapakFotografi}
+                                                alt={selectedEtkinlik.etkinlikAdi}
+                                                className="modal-kapak-fotografi"
+                                                onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/400x250?text=Afiş+Hatalı'; }}
+                                            />
+                                        )}
+                                    </div>
 
-                            <h4>Seanslar:</h4>
-                            {etkinlikDetay.etkinlikSalonSeansEntities && etkinlikDetay.etkinlikSalonSeansEntities.length > 0 ? (
-                                <ul className="seans-listesi">
-                                    {etkinlikDetay.etkinlikSalonSeansEntities.map((ess, index) => (
-                                        <li key={ess.etkinlikSalonSeansID || index}>
-                                            <p><strong>Mekan:</strong> {ess.salon.salonAdi}</p>
-                                            <p><strong>Tarih:</strong> {new Date(ess.seans.tarih).toLocaleString('tr-TR', {
-                                                weekday: 'long', year: 'numeric', month: 'long',
-                                                day: 'numeric', hour: '2-digit', minute: '2-digit'
-                                            })}</p>
-                                            <p><strong>Adres:</strong> {ess.salon.adres}</p>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>Bu etkinlik için seans bulunmamaktadır.</p>
-                            )}
+                                    <div className="modal-body">
+                                        <p><strong>Açıklama:</strong> {gosterilecekEtkinlikBilgileri.etkinlikAciklamasi}</p>
+                                        <p><strong>Bilet Fiyatı:</strong> {gosterilecekEtkinlikBilgileri.biletFiyati?.toFixed(2)} TL</p>
+                                        <p><strong>Süre:</strong> {gosterilecekEtkinlikBilgileri.etkinlikSuresi} dakika</p>
+                                        <p><strong>Yaş Sınırı:</strong> {gosterilecekEtkinlikBilgileri.yasSiniri}+</p>
 
-                            {etkinlikDetay.organizator && (
-                                <div className="organizator-bilgileri">
-                                    <h4>Organizatör Bilgileri</h4>
-                                    <p><strong>Ad Soyad:</strong> {etkinlikDetay.organizator.adSoyad}</p>
-                                    <p><strong>Email:</strong> {etkinlikDetay.organizator.email}</p>
-                                    <p><strong>Telefon:</strong> {etkinlikDetay.organizator.telefonNumarasi}</p>
-                                </div>
-                            )}
-                        </div>
+                                        {/* Sinemaya özel alanlar - Bunlar ana etkinlikDetay objesinden (SinemaForOrgDetayDto) gelir */}
+                                        {isSinema && etkinlikDetay.sinemaId && ( // etkinlikDetay.sinemaId kontrolü de eklendi
+                                            <>
+                                                {etkinlikDetay.imdbPuani > 0 && <p><strong>IMDb Puanı:</strong> {etkinlikDetay.imdbPuani}</p>}
+                                                {etkinlikDetay.fragmanLinki && (
+                                                    <p><strong>Fragman:</strong> <a href={etkinlikDetay.fragmanLinki} target="_blank" rel="noopener noreferrer" className="fragman-linki">İzle</a></p>
+                                                )}
+                                            </>
+                                        )}
 
-                        <div className="modal-actions">
-                            <button onClick={handleUpdate} className="modal-button update">
-                                <Edit3 size={18} /> Güncelle
-                            </button>
-                            <button onClick={handleDelete} className="modal-button delete">
-                                <Trash2 size={18} /> Sil
-                            </button>
-                            <button onClick={closeModal} className="modal-button close-alt">
-                                Kapat
-                            </button>
-                        </div>
+                                        {gosterilecekEtkinlikBilgileri.etkinlikSalonSeansEntities?.[0]?.etkinlik?.sehir &&
+                                            <p><strong>Şehir:</strong> {gosterilecekEtkinlikBilgileri.etkinlikSalonSeansEntities[0].etkinlik.sehir.sehirAdi}</p>
+                                        }
+
+                                        <h4>Seanslar:</h4>
+                                        {gosterilecekEtkinlikBilgileri.etkinlikSalonSeansEntities && gosterilecekEtkinlikBilgileri.etkinlikSalonSeansEntities.length > 0 ? (
+                                            <ul className="seans-listesi">
+                                                {gosterilecekEtkinlikBilgileri.etkinlikSalonSeansEntities.map((ess, index) => (
+                                                    <li key={ess.etkinlikSalonSeansID || index}>
+                                                        <p><strong>Mekan:</strong> {ess.salon.salonAdi}</p>
+                                                        <p><strong>Tarih:</strong> {new Date(ess.seans.tarih).toLocaleString('tr-TR', {
+                                                            weekday: 'long', year: 'numeric', month: 'long',
+                                                            day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul'
+                                                        })}</p>
+                                                        <p><strong>Adres:</strong> {ess.salon.adres}</p>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p>Bu etkinlik için seans bulunmamaktadır.</p>
+                                        )}
+
+                                        {gosterilecekEtkinlikBilgileri.organizator && (
+                                            <div className="organizator-bilgileri">
+                                                <h4>Organizatör Bilgileri</h4>
+                                                <p><strong>Ad Soyad:</strong> {gosterilecekEtkinlikBilgileri.organizator.adSoyad}</p>
+                                                <p><strong>Email:</strong> {gosterilecekEtkinlikBilgileri.organizator.email}</p>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="modal-actions">
+                                        <button onClick={handleUpdate} className="modal-button update">
+                                            <Edit3 size={18} /> Güncelle
+                                        </button>
+                                        <button onClick={handleDelete} className="modal-button delete">
+                                            <Trash2 size={18} /> Sil
+                                        </button>
+                                        <button onClick={closeModal} className="modal-button close-alt">
+                                            Kapat
+                                        </button>
+                                    </div>
+                                </>
+                            );
+                        })()}
                     </>
                 )}
-                {!isDetayLoading && !etkinlikDetay && (
+                {!isDetayLoading && !etkinlikDetay && isModalOpen && ( // Modal açıksa ve detay yoksa hata göster
                     <div className="modal-error">
                          <button onClick={closeModal} className="modal-close-button" aria-label="Kapat">
                             <XCircle size={24} />
                         </button>
-                        Etkinlik detayları yüklenemedi veya bulunamadı.
+                        Etkinlik detayları yüklenemedi veya bulunamadı. Lütfen tekrar deneyin.
                     </div>
                 )}
             </Modal>

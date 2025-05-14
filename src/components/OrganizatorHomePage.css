@@ -1,3 +1,46 @@
+/* OrganizatorHomePage.css */
+.organizator-home-page {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  padding-bottom: 80px;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.page-title {
+  text-align: center;
+  margin: 30px 0;
+  color: #2a1937;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 50px 20px;
+  font-size: 1.2rem;
+}
+
+.error-container button {
+  margin-top: 15px;
+  padding: 8px 16px;
+  background-color: #434343;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .etkinlikler-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -6,7 +49,6 @@
   max-width: 1600px;
   margin: 0 auto;
 }
-
 
 .etkinlik-kart {
   background: rgba(224, 218, 231, 0.4);
@@ -17,13 +59,13 @@
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(4px);
+  cursor: pointer;
 }
 
 .etkinlik-kart:hover {
   transform: translateY(-8px) scale(1.02);
   box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
 }
-
 
 .kapak-container {
   position: relative;
@@ -42,7 +84,6 @@
   transform: scale(1.1);
 }
 
-
 .yas-siniri {
   position: absolute;
   top: 15px;
@@ -58,25 +99,25 @@
   box-shadow: 0 2px 8px rgba(255, 75, 43, 0.3);
 }
 
+.etkinlik-kart-bilgi {
+  padding: 15px;
+}
 
 .etkinlik-kart h3 {
-  margin: 18px 20px 8px;
+  margin: 0 0 8px 0;
   font-size: 1.3rem;
   color: #1a1a2e;
   font-weight: 700;
   letter-spacing: -0.3px;
-  font-family: 'Montserrat', sans-serif;
 }
 
-
 .etkinlik-kart p {
-  margin: 0 20px 20px;
+  margin: 0;
   color: #4a4a6a;
   font-size: 0.95rem;
   line-height: 1.5;
   font-weight: 400;
 }
-
 
 .plus-button {
   position: fixed;
@@ -95,7 +136,6 @@
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 100;
-  font-size: 28px;
 }
 
 .plus-button:hover {
@@ -103,21 +143,167 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-
-.price-tag {
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
-  background: rgba(0, 0, 0, 0.85);
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 15px;
-  backdrop-filter: blur(4px);
+/* Modal Styles */
+.ReactModal__Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
 }
 
+.ReactModal__Content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: auto;
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  outline: none;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+}
 
+.modal-close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 5px;
+}
+
+.modal-close-button:hover {
+  color: #333;
+}
+
+.modal-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modal-header h2 {
+  margin-bottom: 15px;
+  color: #2a1937;
+}
+
+.modal-kapak-fotografi {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.modal-body p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.modal-body strong {
+  color: #2a1937;
+}
+
+.seans-listesi {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+.seans-listesi li {
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+}
+
+.organizator-bilgileri {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.modal-button.update {
+  background-color: #434343;
+  color: white;
+}
+
+.modal-button.delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.modal-button.close-alt {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.modal-button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.modal-loading,
+.modal-error {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 1.1rem;
+}
+
+/* Animations */
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.etkinlik-kart {
+  animation: cardEntrance 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.etkinlik-kart:nth-child(1) { animation-delay: 0.1s; }
+.etkinlik-kart:nth-child(2) { animation-delay: 0.2s; }
+.etkinlik-kart:nth-child(3) { animation-delay: 0.3s; }
+.etkinlik-kart:nth-child(4) { animation-delay: 0.4s; }
+.etkinlik-kart:nth-child(5) { animation-delay: 0.5s; }
+
+/* Responsive Styles */
 @media (max-width: 1024px) {
   .etkinlikler-container {
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -142,6 +328,11 @@
     bottom: 30px;
     right: 30px;
   }
+
+  .ReactModal__Content {
+    width: 90%;
+    padding: 20px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -161,26 +352,14 @@
     bottom: 25px;
     right: 25px;
   }
-}
 
-@keyframes cardEntrance {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
+  .modal-actions {
+    flex-direction: column;
+    gap: 10px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+
+  .modal-button {
+    justify-content: center;
+    width: 100%;
   }
 }
-
-.etkinlik-kart {
-  animation: cardEntrance 0.6s ease-out forwards;
-  opacity: 0;
-}
-
-.etkinlik-kart:nth-child(1) { animation-delay: 0.1s; }
-.etkinlik-kart:nth-child(2) { animation-delay: 0.2s; }
-.etkinlik-kart:nth-child(3) { animation-delay: 0.3s; }
-.etkinlik-kart:nth-child(4) { animation-delay: 0.4s; }
-.etkinlik-kart:nth-child(5) { animation-delay: 0.5s; }
