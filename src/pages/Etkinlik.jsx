@@ -1,90 +1,182 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "../api/axios.js";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../components/Etkinlik.css";
 
 const Etkinlik = () => {
   const { eventId } = useParams();
+  const location = useLocation();
   const [etkinlik, setEtkinlik] = useState(null);
   const navigate = useNavigate();
   const { user } = useAuth();
-  const eventIdLong = Number(eventId);
 
-  useEffect(() => {
-    const fetchEtkinlik = async () => {
+  const [detay, setDetay] = useState(null); // Hem EtkinlikDetayDto hem de SinemaDetayDto için ortak state
+    const [isSinema, setIsSinema] = useState(false); // Etkinliğin sinema olup olmadığını tutar
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const eventIdLong = Number(eventId);
+
+  const fetchEtkinlikDetayi = useCallback(async () => {
+      if (!eventIdLong) {
+        setError("Geçersiz Etkinlik ID.");
+        setIsLoading(false);
+        return;
+      }
+
+      const queryParams = new URLSearchParams(location.search);
+      const etkinlikTuruQuery = queryParams.get('tur'); // EventCard'dan gelen ?tur=Değer
+
+      setIsLoading(true);
+      setError(null);
+      setDetay(null); // Önceki detayı temizle
+      setIsSinema(false);
+
       try {
-        const response = await axios.get(`/mainPage/${eventIdLong}`, {
+        let endpoint = '';
+        let fetchedIsSinema = false;
+
+        if (etkinlikTuruQuery && etkinlikTuruQuery.toLowerCase() === 'sinema') {
+          endpoint = `/mainPage/sinema/${eventIdLong}`; // SinemaDetayDto bekliyoruz
+          fetchedIsSinema = true;
+          console.log(`Etkinlik.jsx: Fetching SİNEMA detayı: ${endpoint}`);
+        } else {
+          endpoint = `/mainPage/${eventIdLong}`; // EtkinlikDetayDto bekliyoruz
+          // Eğer tür query'den gelmediyse, bu endpoint'ten gelen yanıttaki türü kontrol edebiliriz.
+          console.log(`Etkinlik.jsx: Fetching NORMAL etkinlik detayı: ${endpoint}`);
+        }
+
+        const response = await axios.get(endpoint, {
           headers: { Authorization: `Bearer ${user?.token}` }
         });
-        setEtkinlik(response.data);
-      } catch (error) {
-        console.error("Etkinlik bilgileri alınırken hata oluştu:", error);
+
+        if (response.data) {
+          setDetay(response.data);
+          if (fetchedIsSinema) {
+              setIsSinema(true);
+          } else {
+              const turAdiApi = response.data.etkinlikTur?.etkinlikTurAdi;
+              if (turAdiApi && turAdiApi.toLowerCase() === 'sinema') {
+                  setIsSinema(true);
+                  console.warn("Etkinlik.jsx: Normal endpoint sinema türünde etkinlik döndürdü. Görüntüleme eksik olabilir. Tür query parametresiyle gelinmeliydi.");
+              }
+          }
+        } else {
+          throw new Error("Etkinlik detayı alınamadı veya boş.");
+        }
+      } catch (err) {
+        console.error("Etkinlik detayları alınırken hata oluştu:", err);
+        setError("Etkinlik bilgileri yüklenirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.");
+      } finally {
+        setIsLoading(false);
       }
+    }, [eventIdLong, user?.token, location.search]);
+
+    useEffect(() => {
+      fetchEtkinlikDetayi();
+    }, [fetchEtkinlikDetayi]);
+
+    if (isLoading) {
+      return <div className="event-loading">Yükleniyor...</div>;
+    }
+
+    if (error) {
+      return <div className="event-error-container"><p>{error}</p></div>;
+    }
+
+    if (!detay) {
+      return <div className="event-error-container"><p>Etkinlik bulunamadı.</p></div>;
+    }
+
+    // Render edilecek veriyi DTO yapısına göre belirliyoruz
+    // `detay` state'i ya EtkinlikDetayDto ya da SinemaDetayDto olacak.
+    const etkinlikRenderData = isSinema ? detay.etkinlikDetayDto : detay;
+    const sinemaOzelRenderData = isSinema ? detay : null;
+
+    // etkinlikRenderData'nın varlığını kontrol et (özellikle sinema durumunda iç DTO için)
+    if (!etkinlikRenderData || typeof etkinlikRenderData.etkinlikID === 'undefined') {
+        return <div className="event-error-container"><p>Etkinlik temel bilgileri yüklenemedi.</p></div>;
+    }
+
+    const handleSalonSeansClick = (seansId, salonId, etkinlikId) => {
+      if (!seansId || !salonId || !etkinlikId) {
+          console.error("Bilet al için gerekli ID'ler eksik:", {seansId, salonId, etkinlikId});
+          alert("Seans veya salon bilgisi eksik, bilet alma işlemi yapılamaz.");
+          return;
+      }
+      navigate(`/bilet-al/${seansId}/${salonId}/${etkinlikId}`);
     };
-    fetchEtkinlik();
-  }, [eventIdLong, user?.token]);
 
-  if (!etkinlik) {
-    return <div className="event-loading">Yükleniyor...</div>;
-  }
 
-  const handleSalonSeansClick = (seansId, salonId) => {
-    navigate(`/bilet-al/${seansId}/${salonId}/${etkinlik.etkinlikID}`);
-  };
+    return (
+        <div className="event-container">
+            {/* Event Header Section */}
+            <div className="event-header">
+                {/* Left Section - Event Info */}
+                <div className="event-info">
+                    <h1 className="event-title">{etkinlikRenderData.etkinlikAdi}</h1>
+                    <span className="event-genre">{etkinlikRenderData.etkinlikTur?.etkinlikTurAdi}</span>
+                    <p className="event-description">{etkinlikRenderData.etkinlikAciklamasi}</p>
+                    {isSinema && sinemaOzelRenderData && (
+                        <div>
+                            {sinemaOzelRenderData.imdbPuani > 0 && <p>IMDb Puanı: {sinemaOzelRenderData.imdbPuani.toFixed(1)}</p>}
+                            {sinemaOzelRenderData.fragmanLinki && (
+                                <p><a href={sinemaOzelRenderData.fragmanLinki} target="_blank" rel="noopener noreferrer">Fragmanı İzle</a></p>
+                            )}
+                        </div>
+                    )}
+                    <div className="event-price">
+                        <span>{etkinlikRenderData.biletFiyati?.toFixed(2)} TL</span>
+                    </div>
+                </div>
 
-  return (
-    <div className="event-container">
-      {/* Event Header Section */}
-      <div className="event-header">
-        {/* Left Section - Event Info */}
-        <div className="event-info">
-          <h1 className="event-title">{etkinlik.etkinlikAdi}</h1>
-          <span className="event-genre">{etkinlik.etkinlikTur.etkinlikTurAdi}</span>
-          <p className="event-description">{etkinlik.etkinlikAciklamasi}</p>
-          <div className="event-price">
-            <span>{etkinlik.biletFiyati} TL</span>
-          </div>
-        </div>
-
-        {/* Right Section - Event Poster */}
-        <div className="event-poster">
-          <img
-            src={etkinlik.kapakFotografi}
-            alt={etkinlik.etkinlikAdi}
-            className="poster-image"
-          />
-          <div className="age-restriction">+{etkinlik.yasSiniri}</div>
-        </div>
-      </div>
-
-      {/* Sessions Section */}
-      <div className="sessions-container">
-        <h2 className="sessions-title">Seanslar</h2>
-        {etkinlik.etkinlikSalonSeansEntities.map((salonSeans) => (
-          <div
-            key={salonSeans.etkinlikSalonSeansID}
-            className="session-card"
-          >
-            <div className="session-info">
-              <h3 className="theater-name">{salonSeans.salon.salonAdi}</h3>
-              <p className="theater-address">{salonSeans.salon.adres}</p>
-              <p className="session-time">
-                {new Date(salonSeans.seans.tarih).toLocaleDateString()} -{" "}
-                {new Date(salonSeans.seans.tarih).toLocaleTimeString()}
-              </p>
+                {/* Right Section - Event Poster */}
+                <div className="event-poster">
+                    <img
+                        src={etkinlikRenderData.kapakFotografi}
+                        alt={etkinlikRenderData.etkinlikAdi}
+                        className="poster-image"
+                    />
+                    <div className="age-restriction">
+                        +{etkinlikRenderData.yasSiniri}
+                    </div>
+                </div>
             </div>
-            <button
-              onClick={() => handleSalonSeansClick(salonSeans.seans.seansID, salonSeans.salon.salonID)}
-              className="seat-selection-btn"
-            >
-              Koltuk Seç
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+
+            {/* Sessions Section */}
+            <div className="sessions-container">
+                <h2 className="sessions-title">Seanslar</h2>
+                {etkinlikRenderData.etkinlikSalonSeansEntities && etkinlikRenderData.etkinlikSalonSeansEntities.length > 0 ? (
+                    <div className="sessions-grid">
+                        {etkinlikRenderData.etkinlikSalonSeansEntities.map((salonSeans) => (
+                            <div
+                                key={salonSeans.etkinlikSalonSeansID}
+                                className="session-card"
+                            >
+                                <div className="session-info">
+                                    <h3 className="theater-name">{salonSeans.salon.salonAdi}</h3>
+                                    <p className="theater-address">{salonSeans.salon.adres}</p>
+                                    <p className="session-time">
+                                    {new Date(salonSeans.seans.tarih).toLocaleDateString()} -{" "}
+                                    {new Date(salonSeans.seans.tarih).toLocaleTimeString()}
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => handleSalonSeansClick(salonSeans.seans.seansID, salonSeans.salon.salonID, etkinlikRenderData.etkinlikID)}
+                                    className="seat-selection-btn"
+                                >
+                                    Koltuk Seç
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="no-sessions-message">Bu etkinlik için henüz seans bulunmamaktadır.</p>
+                )}
+            </div>
+        </div>
+    );
 };
 
 export default Etkinlik;

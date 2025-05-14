@@ -6,12 +6,20 @@ const EventCard = ({ etkinlik }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    if (etkinlik?.etkinlikID) {
-      navigate(`/etkinlik/${etkinlik.etkinlikID}`);
-    } else {
-      console.error("Etkinlik ID bulunamadı.");
-    }
-  };
+      if (etkinlik?.etkinlikID) {
+        const turAdi = etkinlik.etkinlikTur?.etkinlikTurAdi; // EtkinlikEntity'den tür adını al
+
+        if (turAdi) {
+        console.log(`EventCard Click: ID=${etkinlik.etkinlikID}, Tür=${turAdi}`);
+        navigate(`/etkinlik/${etkinlik.etkinlikID}?tur=${encodeURIComponent(turAdi)}`);
+        } else {
+        console.warn("EventCard: Etkinlik türü bilgisi EtkinlikEntity'de bulunamadı. Sadece ID ile yönlendiriliyor.", etkinlik);
+        navigate(`/etkinlik/${etkinlik.etkinlikID}`);
+        }
+      } else {
+        console.error("EventCard: Etkinlik ID bulunamadı.", etkinlik);
+      }
+    };
 
   return (
     <div className="event-card" onClick={handleCardClick}>
@@ -24,13 +32,13 @@ const EventCard = ({ etkinlik }) => {
         {etkinlik.yasSiniri && (
           <span className="age-badge">+{etkinlik.yasSiniri}</span>
         )}
-        {etkinlik.ucret && (
-          <span className="price-tag">{etkinlik.ucret} TL</span>
+        {etkinlik.biletFiyati && (
+          <span className="price-tag">{etkinlik.biletFiyati.toFixed(2)} TL</span>
         )}
       </div>
       <div className="card-content">
         <h3 className="card-title">{etkinlik.etkinlikAdi}</h3>
-        {etkinlik.etkinlikSuresi && (
+        {typeof etkinlik.etkinlikSuresi === 'number' && etkinlik.etkinlikSuresi > 0 && (
           <p className="card-duration">{etkinlik.etkinlikSuresi} dakika</p>
         )}
       </div>
