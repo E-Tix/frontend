@@ -1,0 +1,148 @@
+/* src/components/AdminHomePage.css */
+.admin-homepage-container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-homepage-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.page-description {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+.admin-bilet-listesi {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.admin-bilet-karti {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.admin-bilet-karti.hatalı-veri {
+    background-color: #fff3cd; /* Sarımsı arka plan */
+    color: #856404;
+    border-color: #ffeeba;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bilet-bilgi-kolon {
+    flex-grow: 1;
+    margin-right: 20px;
+}
+
+.bilet-bilgi-kolon h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #007bff; /* Marka rengi olabilir */
+    font-size: 1.2em;
+}
+
+.bilet-bilgi-kolon p {
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.bilet-bilgi-kolon p svg {
+    color: #007bff; /* İkon rengi */
+}
+.bilet-bilgi-kolon p strong {
+    color: #333;
+}
+
+.bilet-sil-kolon {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.bilet-sil-kolon span {
+    font-size: 0.8em;
+    color: #777;
+}
+
+.sil-butonu {
+    background-color: #dc3545; /* Kırmızı */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.sil-butonu:hover {
+    background-color: #c82333;
+}
+
+.no-bilets-message,
+.deleting-message {
+    text-align: center;
+    font-size: 1.1em;
+    color: #555;
+    padding: 30px;
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.loading-spinner-container,
+.error-message-container {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     min-height: 200px; /* Yeterli alan sağla */
+     font-size: 1.2em;
+     color: #555;
+}
+.error-message-container {
+     color: #dc3545;
+}
+.error-message-container svg {
+    margin-right: 8px;
+}
+
+/* Temel loading spinner */
+.loading-spinner {
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto; /* Ortala */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
