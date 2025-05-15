@@ -46,7 +46,7 @@ const KullaniciHomePage = () => {
   return (
     <div className="user-home-container">
       <header className="user-header">
-        <h1 className="user-title">Etkinlikler</h1>
+        <h1 className="user-title">ETKİNLİKLER</h1>
         <p className="user-tagline">Şehrinizdeki en güncel etkinlikler</p>
       </header>
 

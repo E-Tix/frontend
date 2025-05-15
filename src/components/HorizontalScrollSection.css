@@ -3,9 +3,10 @@
 }
 
 .section-title {
+    font-family: 'Iceberg', sans-serif;
     font-size: 1.8rem;
     font-weight: 700;
-    color: #2c3e50;
+    color: white;
     margin-bottom: 20px;
     padding-left: 20px;
     cursor: pointer;
@@ -52,7 +53,7 @@
     cursor: pointer;
     z-index: 10;
     border: none;
-    color: #6a11cb;
+    color: rgba(129, 26, 25, 1);
     font-size: 1.2rem;
     transition: all 0.3s ease;
 }
@@ -77,10 +78,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f1f3f5;
+    background-color: rgba(71, 85, 90, 0.8);
     border-radius: 10px;
-    border: 2px dashed #adb5bd;
-    color: #6a11cb;
+    border: 2px dashed rgba(104, 144, 157, 1);
+    color: white;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -88,8 +89,7 @@
 }
 
 .view-all-card:hover {
-    background-color: #e2e6ea;
-    border-color: #6a11cb;
+    background-color: rgba(104, 144, 157, 1);
 }
 
 @media (max-width: 768px) {

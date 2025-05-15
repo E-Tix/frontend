@@ -294,7 +294,7 @@ const OrganizatorProfil = () => {
                 <div className="profil-organizator-action-buttons">
                     {!isEditing ? (
                         <>
-                            <button onClick={() => navigate()} className="profil-organizator-btn profil-organizator-primary">
+                            <button onClick={() => navigate("/organizatör-home")} className="profil-organizator-btn profil-organizator-primary">
                                 Etkinliklerim
                             </button>
                             <button onClick={() => setIsEditing(true)} className="profil-organizator-btn profil-organizator-success">

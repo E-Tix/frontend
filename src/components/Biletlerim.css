@@ -1,0 +1,126 @@
+/* src/pages/Biletlerim.css */
+.biletlerim-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.biletlerim-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.bilet-bolumu {
+    margin-bottom: 40px;
+}
+
+.bilet-bolumu h2 {
+    color: #555;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+.bilet-bolumu h2 svg {
+    margin-right: 10px;
+}
+
+
+.bilet-listesi {
+    display: grid;
+    gap: 20px;
+}
+
+.bilet-karti {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.bilet-karti:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bilet-karti.gecmis {
+    opacity: 0.7;
+    background-color: #f0f0f0;
+}
+
+.bilet-karti-sol {
+    flex-shrink: 0;
+}
+
+.bilet-etkinlik-kapak {
+    width: 100px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.bilet-karti-sag {
+    flex-grow: 1;
+}
+
+.bilet-karti-sag h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.3em;
+}
+
+.etkinlik-linki {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.etkinlik-linki:hover {
+    text-decoration: underline;
+}
+
+.bilet-karti-sag p {
+    margin: 6px 0;
+    font-size: 0.95em;
+    color: #555;
+    display: flex;
+    align-items: center;
+}
+.bilet-karti-sag p svg {
+    margin-right: 8px;
+    color: #777;
+}
+
+
+.iptal-et-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.iptal-et-button:hover {
+    background-color: #c82333;
+}
+
+.biletlerim-loading,
+.biletlerim-error {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2em;
+}

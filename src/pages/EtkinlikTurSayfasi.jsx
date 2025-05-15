@@ -58,7 +58,7 @@ const EtkinlikTurSayfasi = () => {
       <h2 className="etkinlik-tur-baslik">{capitalizeFirstLetter(tur)} Etkinlikleri</h2>
       <div className="etkinlikler-grid">
         {etkinlikler.length === 0 ? (
-          <p>Bu kategoriye ait etkinlik bulunamadı.</p>
+          <p className="etkinlik-yok">Bu kategoriye ait etkinlik bulunamadı.</p>
         ) : (
           etkinlikler.map((etkinlik) => (
             <EventCard key={etkinlik.etkinlikID} etkinlik={etkinlik} />

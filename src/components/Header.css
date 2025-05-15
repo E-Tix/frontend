@@ -135,6 +135,38 @@
     outline: none;
 }
 
+.search-form-header {
+  position: relative; /* İkonu içeride konumlandırmak için */
+  display: flex; /* Input ve butonu yan yana getirmek için (opsiyonel, sadece ikon butonu inputun dışındaysa) */
+  align-items: center;
+}
+
+.search-input {
+  /* Mevcut stilleriniz... */
+  padding-right: 35px; /* İkonun genişliği + biraz boşluk kadar padding */
+}
+
+.search-button-header { /* Bu, <button> elementinin sınıfı olacak */
+  position: absolute;
+  right: 5px; /* Inputun sağ kenarına olan mesafe */
+  top: 50%;
+  transform: translateY(-50%); /* Dikeyde ortalamak için */
+  background: transparent;
+  border: none;
+  padding: 0; /* Butonun kendi padding'ini sıfırla */
+  cursor: pointer;
+  display: flex; /* İkonu içinde ortalamak için */
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-search-icon {
+  width: 30px;
+  height: 30px;
+  display: block;
+  margin-right: 5px;
+}
+
 .profile-icon {
     width: 45px;
     height: 45px;

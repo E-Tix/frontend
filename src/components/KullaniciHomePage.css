@@ -1,12 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
+
 .user-home-container {
     font-family: 'Montserrat', sans-serif;
     min-height: 100vh;
-
     padding-bottom: 60px;
 }
 
 .user-header {
-    background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+    background: rgba(34, 40, 42, 1);
     color: white;
     padding: 2rem 5%;
     text-align: center;
@@ -16,8 +17,9 @@
 
 .user-title {
     margin: 0;
+    font-family: 'Iceberg', sans-serif;
     font-size: 2.5rem;
-    letter-spacing: -1px;
+    letter-spacing: 2px;
     font-weight: 700;
     text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }

@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Chivo:wght@300;400;700&family=Libre+Baskerville:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+@import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hanuman:wght@300;400;700&display=swap');
 
 :root {
   --primary: #2b219a;
@@ -24,15 +26,13 @@
   width: 100%;
   max-width: 1500px;
   min-height: 70vh;
-  background: var(--dark);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
   position: relative;
-  border: 1px solid var(--glass);
   overflow: hidden;
   margin: 20px auto;
+  border-top-left-radius: 60px;
+  border-bottom-right-radius: 60px;
 }
 
 .event-container::before {
@@ -42,7 +42,9 @@
   left: 0;
   right: 0;
   height: 40%;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-top-left-radius: 60px;
+  border-bottom-right-radius: 60px;
+  background: linear-gradient(135deg, rgba(34, 40, 42, 1) 0%, rgba(34, 40, 42, 1) 100%);
   z-index: 0;
 }
 
@@ -104,7 +106,7 @@
 }
 
 .event-title {
-  font-family: 'Libre Baskerville', serif;
+  font-family: 'Iceberg', sans-serif;
   font-size: 2.8rem;
   line-height: 1.1;
   color: var(--light);
@@ -119,7 +121,7 @@
   left: 0;
   width: 80px;
   height: 3px;
-  background: var(--accent);
+  background: #68909D;
   border-radius: 3px;
 }
 
@@ -127,14 +129,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--card-bg);
   backdrop-filter: blur(10px);
-  padding: 0.6rem 1.2rem;
+  padding: 0.6rem;
   border-radius: 50px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--accent);
-  border: 1px solid rgba(0, 240, 255, 0.2);
+  font-family: 'Iceberg', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
   width: fit-content;
 }
 
@@ -148,15 +149,43 @@
   font-size: 1rem;
   line-height: 1.7;
   color: var(--gray);
+  font-family: 'Hanuman', sans-serif;
 }
 
 .event-price {
   margin-top: auto;
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
+/* Bilet fiyatı için buton benzeri görünüm ama tıklanamaz */
+.price-display-button {
+  background: rgba(55, 127, 0, 1); /* Buton benzeri bir arka plan */
+  backdrop-filter: blur(5px);
+  border: 3px solid rgba(83, 168, 17, 1);
+  color: var(--light);
+  padding: 0.2rem 1.5rem;
+  border-radius: 50px; /* Yuvarlak buton */
+  font-family: 'Iceberg', sans-serif;
+  font-size: 1.5rem; /* Mevcut fiyat boyutuyla tutarlı */
+  font-weight: 500;
+  cursor: default; /* Tıklanamaz olduğunu belirtir */
+  display: inline-flex; /* İçeriği sarması için */
+  align-items: center;
+  position: relative; /* Pseudo-element için */
+}
+
+/* Mevcut TL simgesi için olan pseudo-elementi buna uyarlayalım */
+.price-display-button::before {
+  content: '₺';
+  font-size: 1.2rem; /* Biraz küçültebiliriz */
+  color: rgba(255, 255, 255, 0.5);
+  margin-right: 0.5rem; /* Fiyatla arasına boşluk */
+  /* position: absolute; left: -1rem; top: 0.2rem; gibi ayarlamalar yerine flex ile daha kolay olabilir */
+}
+
+/*
 .event-price span {
   font-size: 2rem;
   font-weight: 700;
@@ -170,7 +199,42 @@
   position: absolute;
   left: -1rem;
   top: 0.2rem;
-  color: var(--accent);
+  color: rgba(104, 144, 157, 1);
+}
+*/
+
+/* Fragman linki için buton stili */
+.trailer-button {
+  background: rgba(71, 85, 90, 0.32);
+  color: var(--light);
+  padding: 0.6rem 1.5rem;
+  border: 3px solid #68909D;
+  border-radius: 50px;
+  font-family: 'Iceberg', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none; /* Link alt çizgisini kaldır */
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex; /* Ikonla metni hizalamak için */
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.trailer-button:hover {
+  transform: translateY(-2px);
+  background: #68909D;
+  box-shadow: 0 6px 15px rgba(var(--primary-light), 0.4);
+}
+
+.trailer-button:active {
+  transform: translateY(0);
+}
+
+.fragman-icon{
+    width: 20px;
+    height: auto;
 }
 
 .price-label {
@@ -227,7 +291,7 @@
 }
 
 .sessions-title {
-  font-family: 'Libre Baskerville', serif;
+  font-family:'Iceberg', sans-serif;
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
   display: flex;
@@ -247,7 +311,8 @@
   display: flex;
   flex-direction: column;
   padding: 1.5rem;
-  background: var(--card-bg);
+  margin-bottom: 10px;
+  background: rgba(34, 40, 42, 0.8);
   backdrop-filter: blur(10px);
   border-radius: var(--border-radius);
   border: 1px solid var(--glass);
@@ -263,13 +328,13 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: var(--accent);
+  background: rgba(104, 144, 157, 1);
 }
 
 .session-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(110, 0, 255, 0.2);
-  background: rgba(110, 0, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(34, 40, 42, 0.9);
+  background: rgba(34, 40, 42, 1);
 }
 
 .session-info {
@@ -278,6 +343,8 @@
 }
 
 .theater-name {
+  font-family:'Iceberg', sans-serif;
+  color: white;
   font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 0.6rem;
@@ -304,29 +371,10 @@
   color: var(--light);
 }
 
-.koltukSeç {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: var(--light);
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 50px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  box-shadow: 0 5px 15px rgba(110, 0, 255, 0.3);
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-
 .seat-selection-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(110, 0, 255, 0.4);
+  box-shadow: 0 8px 25px rgba(71, 85, 90, 0.32);
+  background: #68909D;
 }
 
 .seat-selection-btn:active {
@@ -340,7 +388,21 @@
   }
 
   .seat-selection-btn {
-    width: auto;
+    background: rgba(71, 85, 90, 0.32);
+      color: var(--light);
+      padding: 0.6rem 1.5rem;
+      border: 3px solid #68909D;
+      border-radius: 50px;
+      font-family: 'Iceberg', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none; /* Link alt çizgisini kaldır */
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex; /* Ikonla metni hizalamak için */
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
 }
 

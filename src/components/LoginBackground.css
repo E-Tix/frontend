@@ -11,8 +11,8 @@
 .background-imageL {
   position: fixed;
   top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Ortalamak için */
+  left: 50%;
+  transform: translate(-50%, -50%); /* Ortalamak için */
   max-width: 100%;
   height: auto;
   z-index: 0;

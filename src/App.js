@@ -19,13 +19,14 @@ import AdminProfil from "./pages/AdminProfil";
 import SifreGuncelle from "./pages/SifreGuncelle";
 import KullaniciHomePage from "./pages/KullaniciHomePage";
 import OrganizatorHomePage from "./pages/OrganizatorHomePage";
-import KategoriSayfasi from "./pages/KategoriSayfasi";
-import Etkinliklerim from "./pages/Etkinliklerim";
 import EtkinlikOlustur from "./pages/EtkinlikOlustur";
 import Etkinlik from "./pages/Etkinlik"
 import BiletAl from "./pages/BiletAl"
 import PaymentSuccess from "./pages/PaymentSuccess"
 import EtkinlikTurSayfasi from "./pages/EtkinlikTurSayfasi"
+import Biletlerim from "./pages/Biletlerim";
+import AramaSonuclariPage from './pages/AramaSonuclariPage';
+import Payment from './pages/Payment.jsx';
 
 function App() {
   return (
@@ -50,9 +51,9 @@ function App() {
                   {/*<Route index element={<Home />} />*/}
                   <Route path="/kullanıcı-home" element={<KullaniciHomePage/>} />
                   <Route path="/organizatör-home" element={<OrganizatorHomePage />} />
-                  <Route path="/kategori/:kategoriId" element={<KategoriSayfasi />} />
+
                   <Route path="/etkinlik/:eventId" element={<Etkinlik />} />
-                  <Route path="/etkinliklerim" element={<Etkinliklerim />} />
+                  <Route path="/biletlerim" element={<Biletlerim />} />
                   <Route path="/etkinlik-olustur" element={<EtkinlikOlustur />} />
                   <Route path="etkinlikler/:tur" element={<EtkinlikTurSayfasi />} />
 
@@ -61,7 +62,9 @@ function App() {
                   <Route path="/profil/Kullanıcı" element={<KullanıcıProfil />} />
                   <Route path="/profil/Organizatör" element={<OrganizatorProfil />} />
                   <Route path="/profil/Admin" element={<AdminProfil />} />
-                  <Route path="/payment" element={<PaymentSuccess />} />
+                  <Route path="/payment-success" element={<PaymentSuccess />} />
+                  <Route path="/arama" element={<AramaSonuclariPage />} />
+                  <Route path="/payment" element={<Payment/>} />
 
                 </Route>
               </Routes>

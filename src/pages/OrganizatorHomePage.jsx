@@ -6,6 +6,7 @@ import { Plus, Trash2, Edit3, XCircle, Film, VenetianMask } from "lucide-react";
 import '../components/OrganizatorHomePage.css';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
+import fragmanIcon from "../assets/fragmanIcon.png";
 
 const OrganizatorHomePage = () => {
     const [etkinlikler, setEtkinlikler] = useState([]);
@@ -209,7 +210,7 @@ const OrganizatorHomePage = () => {
 
     return (
         <div className="organizator-home-page">
-            <h1 className="page-title">Etkinliklerim</h1>
+            <h1 className="ohp-page-title">ETKİNLİKLERİM</h1>
             {etkinlikler.length === 0 && !isLoading && (
                 <div className="empty-state">
                     <p>Henüz bir etkinliğiniz bulunmuyor.</p>
@@ -220,8 +221,8 @@ const OrganizatorHomePage = () => {
                 {etkinlikler.map(etkinlik => (
                     <div key={etkinlik.id} className="etkinlik-kart" onClick={() => openModal(etkinlik)}>
                         <div className="etkinlik-kart-header">
-                            <span className={`etkinlik-turu-badge ${etkinlik.etkinlikTurAdi?.toLowerCase()}`}>
-                                {etkinlik.etkinlikTurAdi?.toLowerCase() === "sinema" ? <Film size={16}/> : <VenetianMask size={16}/>}
+                            <span className={`ohp-etkinlik-tur-adi ${etkinlik.etkinlikTurAdi?.toLowerCase()}`}>
+                                {etkinlik.etkinlikTurAdi?.toLowerCase() === "sinema" ? <Film size={20}/> : <VenetianMask size={20}/>}
                                 {etkinlik.etkinlikTurAdi || "Belirsiz"}
                             </span>
                             {etkinlik.yasSiniri > 0 && <span className="yas-siniri">{etkinlik.yasSiniri}+ </span>}
@@ -254,8 +255,8 @@ const OrganizatorHomePage = () => {
                 isOpen={isModalOpen}
                 onRequestClose={closeModal}
                 contentLabel="Etkinlik Detayları"
-                className="modal-content" // CSS'te stil verilecek
-                overlayClassName="modal-overlay" // CSS'te stil verilecek
+                className="ReactModal__Content" // CSS'te stil verilecek
+                overlayClassName="ReactModal__Overlay" // CSS'te stil verilecek
             >
                 {isDetayLoading && <div className="modal-loading">Detaylar yükleniyor...</div>}
                 {!isDetayLoading && etkinlikDetay && selectedEtkinlik && (
@@ -265,9 +266,6 @@ const OrganizatorHomePage = () => {
                         </button>
 
                         {(() => {
-                            // Gösterilecek etkinlik bilgilerini belirle
-                            // selectedEtkinlik, EtkinlikForOrgDto'dan gelen ve tür bilgisini içeren obje
-                            // etkinlikDetay ise /getEtkinlik veya /getCinema'dan dönen detay objesi
                             const isSinema = selectedEtkinlik.etkinlikTurAdi?.toLowerCase() === "sinema";
 
                             // Eğer sinema ise ve etkinlikDetay.etkinlikForOrgDetayDto varsa onu kullan,
@@ -275,14 +273,7 @@ const OrganizatorHomePage = () => {
                             const gosterilecekEtkinlikBilgileri = isSinema && etkinlikDetay.etkinlikForOrgDetayDto
                                 ? etkinlikDetay.etkinlikForOrgDetayDto
                                 : etkinlikDetay;
-
-                            // Sinemaya özel ana seviye bilgiler (fragman, imdb) için doğrudan etkinlikDetay kullanılır.
-                            // Ama DTO yapımız zaten etkinlikForOrgDetayDto'yu içeriyor, o yüzden
-                            // modal başlığı gibi yerlerde selectedEtkinlik'ten gelen adı kullanmak daha tutarlı olabilir.
-
                             if (!gosterilecekEtkinlikBilgileri || typeof gosterilecekEtkinlikBilgileri.etkinlikID === 'undefined') {
-                                // Bu durum, sinema için etkinlikForOrgDetayDto'nun gelmediği veya
-                                // normal etkinlik için detayların düzgün yüklenmediği anlamına gelir.
                                 return (
                                     <div className="modal-error">
                                         Etkinlik detayları tam olarak yüklenemedi. Veri yapısı beklenenden farklı.
@@ -315,7 +306,20 @@ const OrganizatorHomePage = () => {
                                             <>
                                                 {etkinlikDetay.imdbPuani > 0 && <p><strong>IMDb Puanı:</strong> {etkinlikDetay.imdbPuani}</p>}
                                                 {etkinlikDetay.fragmanLinki && (
-                                                    <p><strong>Fragman:</strong> <a href={etkinlikDetay.fragmanLinki} target="_blank" rel="noopener noreferrer" className="fragman-linki">İzle</a></p>
+                                                    <p>
+                                                        <a
+                                                            href={etkinlikDetay.fragmanLinki}
+                                                            target="_blank" rel="noopener noreferrer"
+                                                            className="fragman-linki"
+                                                        >
+                                                            Fragman
+                                                            <img
+                                                                src={fragmanIcon}
+                                                                alt="fragman ikonu"
+                                                                className="fragman-icon"
+                                                            />
+                                                        </a>
+                                                    </p>
                                                 )}
                                             </>
                                         )}
@@ -324,7 +328,7 @@ const OrganizatorHomePage = () => {
                                             <p><strong>Şehir:</strong> {gosterilecekEtkinlikBilgileri.etkinlikSalonSeansEntities[0].etkinlik.sehir.sehirAdi}</p>
                                         }
 
-                                        <h4>Seanslar:</h4>
+                                        <h3 className="modal-ara-baslik">Seanslar:</h3>
                                         {gosterilecekEtkinlikBilgileri.etkinlikSalonSeansEntities && gosterilecekEtkinlikBilgileri.etkinlikSalonSeansEntities.length > 0 ? (
                                             <ul className="seans-listesi">
                                                 {gosterilecekEtkinlikBilgileri.etkinlikSalonSeansEntities.map((ess, index) => (
@@ -344,7 +348,7 @@ const OrganizatorHomePage = () => {
 
                                         {gosterilecekEtkinlikBilgileri.organizator && (
                                             <div className="organizator-bilgileri">
-                                                <h4>Organizatör Bilgileri</h4>
+                                                <h3 className="modal-ara-baslik">Organizatör Bilgileri</h3>
                                                 <p><strong>Ad Soyad:</strong> {gosterilecekEtkinlikBilgileri.organizator.adSoyad}</p>
                                                 <p><strong>Email:</strong> {gosterilecekEtkinlikBilgileri.organizator.email}</p>
                                             </div>

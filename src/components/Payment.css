@@ -1,0 +1,354 @@
+.payment-container {
+    max-width: 1000px;
+
+}
+.payment-divider {
+    border-top: 1px solid #333;
+    margin: 20px 0;
+}
+
+.payment-section {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.payment-section h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.payment-method-label {
+    color: #b0b0b0;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.payment-card-wrapper {
+    display: flex;
+    gap: 30px;
+}
+
+.payment-form-container {
+    flex: 1;
+}
+
+.card-preview-container {
+    width: 350px;
+    position: relative;
+}
+
+.credit-card {
+    width: 100%;
+    height: 300px;
+    perspective: 1000px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    cursor: pointer;
+}
+
+.credit-card.flipped {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-front {
+    background: linear-gradient(135deg, #73578f, #1a1a1a);
+    color: white;
+}
+
+.card-back {
+    background: linear-gradient(135deg, #1a1a1a, #2c73578f);
+    transform: rotateY(180deg);
+    color: white;
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-chip {
+    width: 40px;
+    height: 30px;
+    background: linear-gradient(135deg, #3c4348, #c8ab1b);
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    padding: 3px;
+}
+
+.chip-line {
+    height: 100%;
+    width: 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    position: absolute;
+}
+
+.chip-line:nth-child(1) {
+    left: 5px;
+}
+
+.chip-line:nth-child(2) {
+    left: 12px;
+}
+
+.chip-line:nth-child(3) {
+    left: 19px;
+}
+
+.chip-line:nth-child(4) {
+    left: 26px;
+}
+
+.card-type-logo {
+    font-size: 30px;
+}
+
+.card-number {
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-align: center;
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.card-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-name {
+    font-size: 14px;
+    text-transform: uppercase;
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-expiry {
+    font-size: 14px;
+}
+
+.card-stripe {
+    height: 40px;
+    background-color: #000;
+    margin-top: 20px;
+}
+
+.card-cvv {
+    margin-top: 10px;
+    padding: 5px;
+    background-color: white;
+    color: #000;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80px;
+    align-self: flex-end;
+}
+
+.cvv-label {
+    font-size: 12px;
+}
+
+.cvv-number {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+}
+
+.card-logo-back {
+    align-self: flex-end;
+    font-size: 30px;
+    margin-top: 10px;
+}
+
+.payment-form {
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #b0b0b0;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #333;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border 0.3s;
+    background-color: #2d2d2d;
+    color: #ffffff;
+}
+
+.form-group input:focus {
+    border-color: #ff5722;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 87, 34, 0.2);
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.payment-info {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.payment-info h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.payment-info ul {
+    margin-left: 20px;
+    padding-left: 20px;
+    list-style-type: disc;
+    color: #b0b0b0;
+}
+
+.payment-info li {
+    margin-bottom: 5px;
+}
+
+.payment-terms {
+    margin-top: 20px;
+}
+
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 14px;
+    user-select: none;
+    color: #b0b0b0;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #2d2d2d;
+    border-radius: 4px;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    background-color: #3d3d3d;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: #ff5722;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.payment-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(to right, #ebe42c, #fff243);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.payment-button:hover {
+    background: linear-gradient(to right, #a6f41e, #d6ff22);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+.payment-button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .payment-card-wrapper {
+        flex-direction: column;
+    }
+
+    .card-preview-container {
+        width: 100%;
+        order: -1;
+        margin-bottom: 20px;
+    }
+
+    .credit-card {
+        height: 200px;
+    }
+}

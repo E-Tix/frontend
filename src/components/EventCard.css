@@ -1,18 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
+
 .event-card {
     width: 240px;
     height: 320px;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    background-color: rgb(121, 100, 137);
+    background-color: rgba(71, 85, 90, 0.5);
+    border: 2px solid rgba(104, 144, 157, 1);
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     cursor: pointer;
     flex-shrink: 0;
     position: relative;
+    backdrop-filter: blur(10px); /* Bu alanın altında kalan kısımların bulanık görünmesi için */
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .event-card:hover {
     transform: translateY(-5px);
+    background-color: rgba(166, 12, 10, 1);
+    border: 2px solid rgba(129, 26, 25, 1);
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
@@ -20,6 +27,10 @@
     position: relative;
     height: 65%;
     width: 100%;
+    top: 33%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 12px;
     overflow: hidden;
 }
 
@@ -68,9 +79,10 @@
 }
 
 .card-title {
+    font-family:  'Iceberg', sans-serif;
     font-size: 1.1rem;
     font-weight: 700;
-    color: #2b2d42;
+    color: white;
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
@@ -79,7 +91,7 @@
 
 .card-duration {
     font-size: 0.85rem;
-    color: #6c757d;
+    color: rgba(255, 255, 255, 0.5);
     margin-top: 5px;
 }
 

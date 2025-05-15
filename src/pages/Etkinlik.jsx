@@ -3,6 +3,7 @@ import axios from "../api/axios.js";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../components/Etkinlik.css";
+import fragmanIcon from "../assets/fragmanIcon.png";
 
 const Etkinlik = () => {
   const { eventId } = useParams();
@@ -118,16 +119,38 @@ const Etkinlik = () => {
                     <h1 className="event-title">{etkinlikRenderData.etkinlikAdi}</h1>
                     <span className="event-genre">{etkinlikRenderData.etkinlikTur?.etkinlikTurAdi}</span>
                     <p className="event-description">{etkinlikRenderData.etkinlikAciklamasi}</p>
+                    {/* IMDb ve Fragman linki (Sadece Sinema) */}
                     {isSinema && sinemaOzelRenderData && (
-                        <div>
-                            {sinemaOzelRenderData.imdbPuani > 0 && <p>IMDb Puanı: {sinemaOzelRenderData.imdbPuani.toFixed(1)}</p>}
-                            {sinemaOzelRenderData.fragmanLinki && (
-                                <p><a href={sinemaOzelRenderData.fragmanLinki} target="_blank" rel="noopener noreferrer">Fragmanı İzle</a></p>
-                            )}
-                        </div>
+                      <div className="cinema-specific-info"> {/* Bu kısmı ayrı bir div'e alabiliriz veya event-price'dan önce gösterebiliriz */}
+                        {sinemaOzelRenderData.imdbPuani > 0 && <p>IMDb Puanı: {sinemaOzelRenderData.imdbPuani.toFixed(1)}</p>}
+                        {/* Fragman linki buradan kaldırılıp fiyatın yanına taşınacak */}
+                      </div>
                     )}
+
+                    {/* Fiyat ve koşullu Fragman Butonu */}
                     <div className="event-price">
-                        <span>{etkinlikRenderData.biletFiyati?.toFixed(2)} TL</span>
+                      {etkinlikRenderData.biletFiyati !== null && typeof etkinlikRenderData.biletFiyati !== 'undefined' && (
+                        <div className="price-display-button">
+                          {etkinlikRenderData.biletFiyati?.toFixed(2)}
+                        </div>
+                      )}
+                      {isSinema && sinemaOzelRenderData && sinemaOzelRenderData.fragmanLinki && (
+                        <a
+                          href={sinemaOzelRenderData.fragmanLinki}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="trailer-button"
+                        >
+                          {/* İsteğe bağlı olarak bir ikon eklenebilir */}
+                          {/* <span className="material-icon">movie</span> */}
+                          Fragman
+                          <img
+                            src={fragmanIcon}
+                            alt="fragman ikonu"
+                            className="fragman-icon"
+                          />
+                        </a>
+                      )}
                     </div>
                 </div>
 

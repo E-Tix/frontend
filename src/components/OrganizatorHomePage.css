@@ -1,27 +1,36 @@
 /* OrganizatorHomePage.css */
+@import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hanuman:wght@300;400;700&display=swap');
+
 .organizator-home-page {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
   padding-bottom: 80px;
   min-height: 100vh;
-  background-color: #f8f9fa;
 }
 
-.page-title {
+.ohp-page-title {
   text-align: center;
   margin: 30px 0;
-  color: #2a1937;
+  color: white;
+  font-family:  'Iceberg', sans-serif;
   font-size: 2.2rem;
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: 2px;
 }
 
-.empty-state {
+.empty-state { {/*tekrar bakacağım*/}
   text-align: center;
   padding: 40px 20px;
-  color: #666;
+  color: white;
+  font-family: 'Hanuman', sans-serif;
   font-size: 1.1rem;
   line-height: 1.6;
+}
+
+.ohp-etkinlik-tur-adi{
+    font-family: 'Hanuman', sans-serif;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .loading-container,
@@ -51,25 +60,37 @@
 }
 
 .etkinlik-kart {
-  background: rgba(224, 218, 231, 0.4);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(124, 126, 155, 0.08);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(4px);
-  cursor: pointer;
+    width: 300px;
+    height: 340px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    background-color: rgba(71, 85, 90, 0.5);
+    border: 2px solid rgba(104, 144, 157, 1);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    backdrop-filter: blur(10px); /* Bu alanın altında kalan kısımların bulanık görünmesi için */
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .etkinlik-kart:hover {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
+  background-color: rgba(166, 12, 10, 1);
+  border: 2px solid rgba(129, 26, 25, 1);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
 .kapak-container {
   position: relative;
-  height: 200px;
+  height: 65%;
+  width: 100%;
+  overflow: hidden;
+  top: 33%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 12px;
   overflow: hidden;
 }
 
@@ -88,15 +109,16 @@
   position: absolute;
   top: 15px;
   right: 15px;
-  background: linear-gradient(135deg, #9a86c8 0%, #191618 100%);
+  background: #d7babc;
   color: white;
   padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 13px;
+  border-radius: 12px;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.5px;
   text-shadow: 0 1px 2px rgba(0,0,0,0.2);
   box-shadow: 0 2px 8px rgba(255, 75, 43, 0.3);
+  z-index: 2;
 }
 
 .etkinlik-kart-bilgi {
@@ -105,28 +127,29 @@
 
 .etkinlik-kart h3 {
   margin: 0 0 8px 0;
+  font-family:  'Iceberg', sans-serif;
   font-size: 1.3rem;
-  color: #1a1a2e;
+  color: white;
   font-weight: 700;
-  letter-spacing: -0.3px;
+  letter-spacing: 1px;
 }
 
 .etkinlik-kart p {
   margin: 0;
-  color: #4a4a6a;
+  color: rgba(255, 255, 255, 0.5);
   font-size: 0.95rem;
   line-height: 1.5;
   font-weight: 400;
 }
 
 .plus-button {
-  position: fixed;
-  bottom: 40px;
-  right: 40px;
+  position: sticky;
+  bottom: 5%;
+  left: 90%;
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #434343 0%, #2a1937 100%);
+  background: linear-gradient(135deg, #434343 0%, rgba(129, 26, 25, 1) 100%);
   color: white;
   border: none;
   display: flex;
@@ -163,7 +186,7 @@
   max-width: 800px;
   max-height: 90vh;
   overflow: auto;
-  background: white;
+  background: rgba(34, 40, 42, 1);
   border-radius: 10px;
   padding: 30px;
   outline: none;
@@ -182,17 +205,19 @@
 }
 
 .modal-close-button:hover {
-  color: #333;
+  color: white;
 }
 
 .modal-header {
   margin-bottom: 20px;
+  font-family:  'Iceberg', sans-serif;
+  color: white;
   text-align: center;
 }
 
 .modal-header h2 {
   margin-bottom: 15px;
-  color: #2a1937;
+  color: white;
 }
 
 .modal-kapak-fotografi {
@@ -209,10 +234,39 @@
 .modal-body p {
   margin-bottom: 10px;
   line-height: 1.6;
+  color: white;
+  font-family: 'Hanuman', sans-serif;
 }
 
 .modal-body strong {
-  color: #2a1937;
+  color: rgba(104, 144, 157, 1);
+  font-family:  'Iceberg', sans-serif;
+  letter-spacing: 0.8px;
+}
+
+.fragman-linki {
+  background: rgba(71, 85, 90, 0.32);
+  color: var(--light);
+  padding: 0.6rem 1.5rem;
+  border: 3px solid #68909D;
+  border-radius: 50px;
+  font-family: 'Iceberg', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none; /* Link alt çizgisini kaldır */
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex; /* Ikonla metni hizalamak için */
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-ara-baslik {
+  color: rgba(104, 144, 157, 1);
+  font-family:  'Iceberg', sans-serif;
+  letter-spacing: 0.8px;
+  margin-bottom:5px;
 }
 
 .seans-listesi {
@@ -224,7 +278,8 @@
 .seans-listesi li {
   padding: 15px;
   margin-bottom: 10px;
-  background-color: #f5f5f5;
+  background-color: rgba(71, 85, 90, 0.32);
+  border: 2px solid #68909D;
   border-radius: 6px;
 }
 

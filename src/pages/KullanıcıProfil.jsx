@@ -223,7 +223,7 @@ const KullaniciProfil = () => {
                 <div className="action-buttons">
                     {!isEditing ? (
                         <>
-                            <button onClick={() => navigate("")} className="btn primary">
+                            <button onClick={() => navigate("/biletlerim")} className="btn primary">
                                 <Ticket size={16} /> Biletlerim
                             </button>
                             <button onClick={() => setIsEditing(true)} className="btn success">
