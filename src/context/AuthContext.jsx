@@ -35,7 +35,13 @@ export const AuthProvider = ({ children }) => {
           email: emailOrUsername,
           sifre: password,
         };
-      } else {
+      } else if(role === "Admin"){
+          url = "/login/admin";
+          payload = {
+              email: emailOrUsername,
+              sifre: password,
+          };
+      }else {
         throw new Error("Geçersiz rol seçimi");
       }
 
@@ -55,6 +61,8 @@ export const AuthProvider = ({ children }) => {
           navigate("/organizatör-home")
       }else if (role === "Kullanıcı"){
           navigate("/kullanıcı-home"); // Giriş başarılıysa ana sayfaya yönlendir
+      }else if (role === "Admin"){
+          navigate("/admin-home");
       }else{
           navigate("/");
       }

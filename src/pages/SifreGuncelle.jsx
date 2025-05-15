@@ -28,10 +28,13 @@ const SifreGuncelle = () => {
             return;
         }
 
-        const endpoint =
-            user?.role === "Kullanıcı"
-                ? "http://localhost:8080/Profile/ChangePassword"
-                : "http://localhost:8080/orgProfile/ChangePassword";
+        const endpoint = user?.role === "Kullanıcı"
+            ? "http://localhost:8080/Profile/ChangePassword" // Eğer rol Kullanıcı ise bu endpoint
+            : user?.role === "Admin"
+                ? "http://localhost:8080/admin/changePassword" // Eğer rol Admin ise bu endpoint (path'i düzelttim)
+                : user?.role === "Organizatör" // Organizatör rolünü de ekledim
+                    ? "http://localhost:8080/orgProfile/ChangePassword" // Eğer rol Organizatör ise bu endpoint
+                    : null; // Eğer rol yukarıdakilerden hiçbiri değilse null
 
         axios
             .put(endpoint, {

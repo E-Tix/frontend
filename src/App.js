@@ -27,6 +27,7 @@ import EtkinlikTurSayfasi from "./pages/EtkinlikTurSayfasi"
 import Biletlerim from "./pages/Biletlerim";
 import AramaSonuclariPage from './pages/AramaSonuclariPage';
 import Payment from './pages/Payment.jsx';
+import AdminHomePage from "./pages/AdminHomePage";
 
 function App() {
   return (
@@ -49,8 +50,10 @@ function App() {
                 {/* Authenticated layout için MainLayout kullan */}
                 <Route path="/" element={<MainLayout />}>
                   {/*<Route index element={<Home />} />*/}
+
                   <Route path="/kullanıcı-home" element={<KullaniciHomePage/>} />
                   <Route path="/organizatör-home" element={<OrganizatorHomePage />} />
+                  <Route path="/admin-home" element={<AdminHomePage/>} />
 
                   <Route path="/etkinlik/:eventId" element={<Etkinlik />} />
                   <Route path="/biletlerim" element={<Biletlerim />} />
