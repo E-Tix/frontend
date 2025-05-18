@@ -9,7 +9,7 @@ import { Trash2, AlertTriangle, Ticket, CalendarCheck, MapPin, Home, Tag, User }
 // Bilet kartı göstermek için ayrı bir component oluşturmak temizlik sağlar
 const AdminSilinecekBiletKarti = ({ biletData, onDelete }) => {
     // biletData SilinecekBiletDto yapısında: { kullanici: KullaniciEntity, biletDto: BiletDto }
-    const { kullanici, biletDto } = biletData;
+    const { kullaniciDtoForSilinecekBiletDto, biletDto } = biletData;
 
     // BiletDto'dan gelen bilgiler
     const biletId = biletDto?.biletId; // DTO alan adı biletId
@@ -26,7 +26,7 @@ const AdminSilinecekBiletKarti = ({ biletData, onDelete }) => {
         : 'Belirtilmemiş';
 
     // Kullanıcı bilgisinden (SilinecekBiletDto'daki kullanici alanından)
-    const kullaniciAdi = kullanici?.kullaniciAdi || kullanici?.email || 'Bilinmiyor'; // KullaniciEntity'deki alanları kontrol edin
+    const kullaniciAdi = kullaniciDtoForSilinecekBiletDto?.kullaniciAdi || kullaniciDtoForSilinecekBiletDto?.email || 'Bilinmiyor'; // KullaniciEntity'deki alanları kontrol edin
 
     const handleSilClick = () => {
         if (biletId && onDelete) {
@@ -69,15 +69,16 @@ const AdminSilinecekBiletKarti = ({ biletData, onDelete }) => {
 
 
 const AdminHomePage = () => {
-    const { user, token } = useAuth(); // Admin kullanıcısı token'a sahip olmalı
+    const { user } = useAuth(); // Admin kullanıcısı token'a sahip olmalı
     const [bilets, setBilets] = useState([]); // Silinecek biletler listesi
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     // Silme işlemi için loading state'i (isteğe bağlı, her bilet için ayrı tutulabilir)
     const [isDeleting, setIsDeleting] = useState(false);
+    const token = user && user.token ? user.token : null;
 
     const fetchBilets = useCallback(async () => {
-        if (!user.token) {
+        if (!token) {
             setError("Yetkilendirme token'ı bulunamadı.");
             setIsLoading(false);
             return;
@@ -101,7 +102,7 @@ const AdminHomePage = () => {
                 if (response.data.length !== validBilets.length) {
                     console.warn("API'den gelen bazı biletler eksik/hatalı bilgi içeriyordu (biletDto veya biletId).");
                 }
-
+                console.log(token);
             } else {
                 setBilets([]); // Boş dizi set et
             }
@@ -141,7 +142,7 @@ const AdminHomePage = () => {
             // Query parameter olduğu için params kullanıyoruz
             const response = await axios.delete('/adminMainPage/biletSil', {
                 params: { biletId: biletId },
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` }                
             });
 
             if (response.data === true) {

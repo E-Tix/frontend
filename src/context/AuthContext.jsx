@@ -48,6 +48,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post(url, payload);
 
       const token = response.data; // Backend bize token döndürüyor
+      console.log(token);
 
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
       const email = decodedToken.sub;
