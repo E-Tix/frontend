@@ -305,6 +305,7 @@ const AddEvent = () => {
                 endpoint = 'http://localhost:8080/organizatorMainPage/updateEvent/save';
                 method = axios.put;
                 payload = etkinlikGuncelleDto;
+                console.log("etkinlik güncelle payloadta giden seans: ", payload.seansDuzenleDtoList);
             }
         } else { // YENİ EKLEME MODU
             const etkinlikEkleDto = {
@@ -324,6 +325,7 @@ const AddEvent = () => {
                 endpoint = 'http://localhost:8080/organizatorMainPage/addEvent/save';
                 method = axios.post;
                 payload = etkinlikEkleDto;
+                console.log("etkinlik ekle payloadta giden seans: ", payload.seansDuzenleDtoList);
             }
         }
 
@@ -565,12 +567,25 @@ const AddEvent = () => {
                                     <div className="etkinlik-sessions-list">
                                         {seanslar.map((seans, index) => (
                                             <div key={seans.id || `new-${index}`} className="etkinlik-session-item">
-                                                <span className="etkinlik-session-time">
-                                                    {new Date(seans.tarih + "Z").toLocaleString('tr-TR', { // 'Z' ekleyerek UTC olduğunu belirt
-                                                        weekday: 'short', year: 'numeric', month: 'short',
-                                                        day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul'
-                                                    })}
-                                                </span>
+                                                <input
+                                                    type="datetime-local"
+                                                    value={seans.tarih} // State'deki YYYY-MM-DDTHH:mm formatındaki değeri kullan
+                                                    min={new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0,16)} // Geçmiş tarih seçilemesin (lokal zamana göre)
+                                                    onChange={(e) => {
+                                                        const newDateString = e.target.value; // Input'tan gelen YYYY-MM-DDTHH:mm stringi
+                                                        setSeanslar(prevSeanslar => {
+                                                            const updatedSeanslar = [...prevSeanslar];
+                                                            // İlgili seans objesinin tarihini güncelle
+                                                            updatedSeanslar[index] = {
+                                                                ...updatedSeanslar[index],
+                                                                tarih: newDateString
+                                                                // İsteğe bağlı: etkinlik süresi değişirse bitiş tarihini de burada yeniden hesaplayabilirsiniz
+                                                            };
+                                                            return updatedSeanslar;
+                                                        });
+                                                    }}
+                                                    className="etkinlik-session-input" // Bu input için yeni bir CSS sınıfı ekleyebilirsiniz
+                                                />
                                                 <button
                                                     type="button"
                                                     onClick={() => handleSeansSil(index)}

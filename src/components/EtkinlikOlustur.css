@@ -263,6 +263,8 @@
     background: rgba(159, 122, 234, 0.1);
     border: 1px solid rgba(159, 122, 234, 0.2);
     border-radius: 8px;
+    gap: 15px;
+    min-width: 350px;
 }
 
 .etkinlik-session-time {
