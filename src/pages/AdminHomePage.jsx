@@ -108,7 +108,6 @@ const AdminHomePage = () => {
             }
         } catch (err) {
             console.error("Silinecek biletler alınırken hata oluştu:", err);
-            setError(err.response?.data?.message || "Biletler yüklenirken bir sorun oluştu.");
             // Yetkilendirme hatası durumunda otomatik çıkış yaptırılabilir
              if (err.response?.status === 401 || err.response?.status === 403) {
                  toast.error("Bu sayfaya erişim yetkiniz yok veya oturum süreniz dolmuş.");
@@ -142,7 +141,7 @@ const AdminHomePage = () => {
             // Query parameter olduğu için params kullanıyoruz
             const response = await axios.delete('/adminMainPage/biletSil', {
                 params: { biletId: biletId },
-                headers: { Authorization: `Bearer ${token}` }                
+                headers: { Authorization: `Bearer ${token}` }
             });
 
             if (response.data === true) {
