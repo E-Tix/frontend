@@ -4,20 +4,48 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../components/Etkinlik.css";
 import fragmanIcon from "../assets/fragmanIcon.png";
+//Fragman görüntülenmesi için
+import { XCircle } from 'lucide-react';
+
+//video içeriği oynatılsın diye
+const getEmbedUrl = (url) => {
+    if (!url) return null;
+
+    // Basic YouTube embed URL conversion
+    const youtubeMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/);
+    if (youtubeMatch && youtubeMatch[1]) {
+        // Add autoplay=1 and modestbranding=1 for better popup experience
+        return `https://www.youtube.com/embed/${youtubeMatch[1].split('&')[0]}?autoplay=1&modestbranding=1`;
+    }
+
+    // Basic Vimeo embed URL conversion
+    const vimeoMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com)\/(.+)/);
+    if (vimeoMatch && vimeoMatch[1]) {
+         // Add autoplay=1 for better popup experience
+        return `https://player.vimeo.com/video/${vimeoMatch[1].split('?')[0]}?autoplay=1`;
+    }
+
+    // Return original URL if not recognized (might not work as embed)
+    console.warn("Unknown video URL format, using original:", url);
+    return url;
+};
 
 const Etkinlik = () => {
   const { eventId } = useParams();
   const location = useLocation();
-  const [etkinlik, setEtkinlik] = useState(null);
+  const [etkinlik, setEtkinlik] = useState(null); //Bu artık gereksiz gibi ama emin olmak için silmedim
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const [detay, setDetay] = useState(null); // Hem EtkinlikDetayDto hem de SinemaDetayDto için ortak state
-    const [isSinema, setIsSinema] = useState(false); // Etkinliğin sinema olup olmadığını tutar
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const [isSinema, setIsSinema] = useState(false); // Etkinliğin sinema olup olmadığını tutar
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    const eventIdLong = Number(eventId);
+  const eventIdLong = Number(eventId);
+
+  //Fragman popup'ı açık mı kapalı mı kontrol için
+  const [isTrailerPopupOpen, setIsTrailerPopupOpen] = useState(false);
 
   const fetchEtkinlikDetayi = useCallback(async () => {
       if (!eventIdLong) {
@@ -100,6 +128,9 @@ const Etkinlik = () => {
         return <div className="event-error-container"><p>Etkinlik temel bilgileri yüklenemedi.</p></div>;
     }
 
+    // Fragman linkini embed formatına dönüştür
+    const embedTrailerUrl = sinemaOzelRenderData?.fragmanLinki ? getEmbedUrl(sinemaOzelRenderData.fragmanLinki) : null;
+
     const handleSalonSeansClick = (seansId, salonId, etkinlikId) => {
       if (!seansId || !salonId || !etkinlikId) {
           console.error("Bilet al için gerekli ID'ler eksik:", {seansId, salonId, etkinlikId});
@@ -109,6 +140,10 @@ const Etkinlik = () => {
       navigate(`/bilet-al/${seansId}/${salonId}/${etkinlikId}`);
     };
 
+    // Popup'ı kapatma fonksiyonu
+    const closeTrailerPopup = () => {
+        setIsTrailerPopupOpen(false);
+    };
 
     return (
         <div className="event-container">
@@ -135,21 +170,17 @@ const Etkinlik = () => {
                         </div>
                       )}
                       {isSinema && sinemaOzelRenderData && sinemaOzelRenderData.fragmanLinki && (
-                        <a
-                          href={sinemaOzelRenderData.fragmanLinki}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="trailer-button"
+                        <button
+                            onClick={() => setIsTrailerPopupOpen(true)} // Pop-up'ı aç
+                            className="trailer-button"
                         >
-                          {/* İsteğe bağlı olarak bir ikon eklenebilir */}
-                          {/* <span className="material-icon">movie</span> */}
-                          Fragman
-                          <img
-                            src={fragmanIcon}
-                            alt="fragman ikonu"
-                            className="fragman-icon"
-                          />
-                        </a>
+                            Fragman
+                            <img
+                                src={fragmanIcon}
+                                alt="fragman ikonu"
+                                className="fragman-icon"
+                            />
+                        </button>
                       )}
                     </div>
                 </div>
@@ -198,6 +229,25 @@ const Etkinlik = () => {
                     <p className="no-sessions-message">Bu etkinlik için henüz seans bulunmamaktadır.</p>
                 )}
             </div>
+
+            {/* TRAILER POPUP */}
+            {isTrailerPopupOpen && embedTrailerUrl && (
+                <div className="trailer-popup-overlay" onClick={closeTrailerPopup}>
+                    <div className="trailer-popup-content" onClick={(e) => e.stopPropagation()}> {/* İçeriğe tıklayınca overlay click olayı tetiklenmesin */}
+                        <button className="trailer-popup-close" onClick={closeTrailerPopup}>
+                            <XCircle size={32} color="#fff" /> {/* Kapatma ikonu */}
+                        </button>
+                        <iframe
+                            src={embedTrailerUrl}
+                            title="Etkinlik Fragmanı"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                        ></iframe>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };

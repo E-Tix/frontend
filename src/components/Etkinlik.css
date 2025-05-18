@@ -465,3 +465,59 @@
     left: -0.8rem;
   }
 }
+
+/* Popup Overlay */
+.trailer-popup-overlay {
+    position: fixed; /* Ekranda sabit kalır */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Yarı saydam siyah arka plan */
+    display: flex;
+    justify-content: center; /* İçeriği yatayda ortala */
+    align-items: center; /* İçeriği dikeyde ortala */
+    z-index: 1000; /* Diğer içeriklerin üstünde görünmesini sağla */
+}
+
+/* Popup İçerik Kutusu */
+.trailer-popup-content {
+    position: relative; /* Kapatma butonu için */
+    width: 90%; /* Genişlik */
+    max-width: 800px; /* Maksimum genişlik */
+    aspect-ratio: 16 / 9; /* Video için 16:9 oranını koru */
+    background-color: #000; /* Arka plan rengi */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    overflow: hidden; /* İçeriğin kutu dışına taşmasını engelle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Video Iframe */
+.trailer-popup-content iframe {
+    width: 100%; /* İçerik kutusunun tamamını kapla */
+    height: 100%; /* İçerik kutusunun tamamını kapla */
+}
+
+/* Kapatma Butonu */
+.trailer-popup-close {
+    position: absolute; /* İçerik kutusuna göre konumlandır */
+    top: 10px; /* Üstten boşluk */
+    right: 10px; /* Sağdan boşluk */
+    background: none; /* Arka plan yok */
+    border: none; /* Çerçeve yok */
+    cursor: pointer;
+    font-size: 30px; /* İkon boyutu */
+    color: #fff; /* İkon rengi */
+    z-index: 1010; /* Videonun üzerinde görünmesini sağla */
+    padding: 5px;
+    display: flex; /* İkonu ortalamak için */
+    justify-content: center;
+    align-items: center;
+}
+
+.trailer-popup-close:hover {
+    opacity: 0.8; /* Hover efekti */
+}
