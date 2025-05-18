@@ -1,9 +1,9 @@
 .salon-container {
     text-align: center;
-    padding: 30px;
+    padding: 20px;
     background-color: #1e1e1e;
     color: white;
-    min-height: 100vh;
+    box-sizing: border-box
   }
 
   .koltuk-grid {
@@ -70,3 +70,28 @@
     cursor: not-allowed;
     border: 2px solid rgba(104, 144, 157, 1);
   }
+/* Satırlar arası boşluk ve her satırı ortala */
+.koltuk-row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;      /* Koltuklar arası boşluk */
+  margin-bottom: 8px;
+}
+
+/* src/components/BiletAl.css */
+
+.koltuk-button {
+  width: 48px;
+  height: 48px;
+  font-size: 14px;
+  border-width: 2px;
+  border-radius: 6px;
+}
+
+
+/* .koltuk-grid artık column flex değil, sadece wrapper */
+.koltuk-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
