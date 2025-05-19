@@ -44,26 +44,36 @@ const OrganizatorProfil = () => {
     const formatIBAN = (iban) => {
         if (!iban) return '';
         const cleaned = iban.replace(/\s/g, '').toUpperCase();
-        if (cleaned.length > 2) {
-            return `${cleaned.substring(0, 2)} ${cleaned.substring(2, 6)} ${cleaned.substring(6, 10)} ${cleaned.substring(10, 14)} ${cleaned.substring(14, 18)} ${cleaned.substring(18, 22)} ${cleaned.substring(22, 26)}`;
+        let result = '';
+        const len = cleaned.length;
+
+        // İlk 4 karakteri al (TR + 2 kontrol rakamı)
+        if (len > 0) {
+            result += cleaned.substring(0, 4);
         }
-        return cleaned;
+
+        // İlk 4 karakterden sonraki her 4 karakterin ardından boşluk ekle
+        for (let i = 4; i < len; i += 4) {
+            result += ' ' + cleaned.substring(i, Math.min(i + 4, len));
+        }
+
+        return result.trim();
     };
 
     const validateEmail = (email) => {
-        const re = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
         return re.test(String(email).toLowerCase());
     };
 
     const validatePhone = (phone) => {
         if (!phone) return true;
         const cleaned = phone.replace(/\D/g, '');
-        return /^5\d{9}$/.test(cleaned);
+        return /^0\d{10}$/.test(cleaned);
     };
 
     const validateIBAN = (iban) => {
         if (!iban) return true;
-        return /^TR\d{22}$/i.test(iban.replace(/\s/g, ''));
+        return /^TR\d{24}$/i.test(iban.replace(/\s/g, ''));
     };
 
     const handleChange = (e) => {
@@ -106,6 +116,7 @@ const OrganizatorProfil = () => {
         if (name === 'iban') {
             const cleaned = value.replace(/\s/g, '').toUpperCase();
             formattedValue = formatIBAN(cleaned);
+
 
             setErrors({
                 ...errors,
@@ -223,7 +234,7 @@ const OrganizatorProfil = () => {
                                 type="email"
                                 value={organizatorInfo.email || ''}
                                 onChange={handleChange}
-                                readOnly={!isEditing}
+                                readOnly
                                 placeholder="example@gmail.com"
                                 className={errors.email && isEditing ? 'profil-organizator-invalid' : ''}
                             />

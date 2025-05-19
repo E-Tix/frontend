@@ -185,7 +185,7 @@ const OrganizatorHomePage = () => {
                 toast.error(err.response?.data?.message || `Etkinlik silinirken bir hata oluştu.`);
             }
         };
-
+    console.log("etkinlik payload", etkinlikler);
     const currentEtkinlikler = etkinlikler.filter(etkinlik => !etkinlik.tarihiGectiMi);
     const pastEtkinlikler = etkinlikler.filter(etkinlik => etkinlik.tarihiGectiMi);
 
@@ -216,7 +216,11 @@ const OrganizatorHomePage = () => {
                     ) : (
                         <div className="etkinlikler-container">
                             {currentEtkinlikler.map(etkinlik => (
-                                <div key={etkinlik.id} className="etkinlik-kart" onClick={() => openModal(etkinlik)}>
+                                <div
+                                    key={etkinlik.id}
+                                    className={`etkinlik-kart ${etkinlik.tarihiGectiMi ? 'past-event-card' : ''}`}
+                                    onClick={() => openModal(etkinlik)}
+                                >
                                     <div className="etkinlik-kart-header">
                                         <span className={`ohp-etkinlik-tur-adi ${etkinlik.etkinlikTurAdi?.toLowerCase()}`}>
                                             {etkinlik.etkinlikTurAdi?.toLowerCase() === "sinema" ? <Film size={20}/> : <VenetianMask size={20}/>}
@@ -252,7 +256,11 @@ const OrganizatorHomePage = () => {
                     ) : (
                         <div className="etkinlikler-container">
                             {pastEtkinlikler.map(etkinlik => (
-                                <div key={etkinlik.id} className="etkinlik-kart" onClick={() => openModal(etkinlik)}>
+                                <div
+                                    key={etkinlik.id}
+                                    className={`etkinlik-kart ${etkinlik.tarihiGectiMi ? 'past-event-card' : ''}`}
+                                    onClick={() => openModal(etkinlik)}
+                                >
                                     <div className="etkinlik-kart-header">
                                         <span className={`ohp-etkinlik-tur-adi ${etkinlik.etkinlikTurAdi?.toLowerCase()}`}>
                                             {etkinlik.etkinlikTurAdi?.toLowerCase() === "sinema" ? <Film size={20}/> : <VenetianMask size={20}/>}
@@ -316,6 +324,8 @@ const OrganizatorHomePage = () => {
                                     </div>
                                 );
                             }
+
+                            const isPastEvent = selectedEtkinlik.tarihiGectiMi;
 
                             return (
                                 <>
@@ -392,12 +402,17 @@ const OrganizatorHomePage = () => {
                                     </div>
 
                                     <div className="modal-actions">
-                                        <button onClick={handleUpdate} className="modal-button update">
-                                            <Edit3 size={18} /> Güncelle
-                                        </button>
-                                        <button onClick={handleDelete} className="modal-button delete">
-                                            <Trash2 size={18} /> Sil
-                                        </button>
+                                        {/* Eğer etkinlik geçmişte DEĞİLSE (tarihiGectiMi false ise) bu butonları göster */}
+                                        {!isPastEvent && (
+                                            <>
+                                                <button onClick={handleUpdate} className="modal-button update">
+                                                    <Edit3 size={18} /> Güncelle
+                                                </button>
+                                                <button onClick={handleDelete} className="modal-button delete">
+                                                    <Trash2 size={18} /> Sil
+                                                </button>
+                                            </>
+                                        )}
                                         <button onClick={closeModal} className="modal-button close-alt">
                                             Kapat
                                         </button>

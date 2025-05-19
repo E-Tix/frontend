@@ -33,7 +33,7 @@ const getEmbedUrl = (url) => {
 const Etkinlik = () => {
   const { eventId } = useParams();
   const location = useLocation();
-  const [etkinlik, setEtkinlik] = useState(null); //Bu artık gereksiz gibi ama emin olmak için silmedim
+  //const [etkinlik, setEtkinlik] = useState(null); //Bu artık gereksiz gibi ama emin olmak için silmedim
   const navigate = useNavigate();
   const { user } = useAuth();
 
