@@ -10,13 +10,41 @@
 }
 
 .ohp-page-title {
+  background: rgba(34, 40, 42, 1);
   text-align: center;
   margin: 30px 0;
+  padding: 2rem 5%;
   color: white;
-  font-family:  'Iceberg', sans-serif;
+  font-family: 'Iceberg', sans-serif;
   font-size: 2.2rem;
   font-weight: 700;
   letter-spacing: 2px;
+  border-top-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.current-events-section,
+.past-events-section {
+    margin-top: 20px;
+    margin-bottom: 30px; /* Bölümler arasına boşluk */
+}
+
+.ohp-section-title {
+    font-family: 'Iceberg', sans-serif;
+    font-size: 1.5em;
+    margin-right: 30px;
+    margin-left: 30px;
+    border-bottom: 2px solid rgba(104, 144, 157, 0.5); /* Başlık altına çizgi */
+    padding-bottom: 5px;
+    color: rgba(104, 144, 157, 1);
+}
+
+.section-empty-message {
+    font-family: 'Hanuman', sans-serif;
+    color: rgba(255, 255, 255, 0.4);
+    margin-left: 30px;
+    margin-top: 25px;
 }
 
 .empty-state { {/*tekrar bakacağım*/}
@@ -54,7 +82,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
-  padding: 40px 5%;
+  padding-top: 40px;
+  padding-bottom: 20px;
   max-width: 1600px;
   margin: 0 auto;
 }

@@ -107,19 +107,6 @@ const OrganizatorHomePage = () => {
                     // EĞER EtkinlikForOrgDto'da sinemaId alanı yoksa veya null ise:
                     console.error("openModal HATA (SİNEMA): EtkinlikForOrgDto'dan beklenen 'sinemaId' alanı gelmedi veya null!", JSON.stringify(etkinlik, null, 2));
                     toast.error("Sinema etkinliği için gerekli Sinema ID'si bulunamadı. Detaylar yüklenemeyebilir.");
-                    // Bu durumda modal açılsa bile doğru detaylar yüklenemez.
-                    // Kullanıcıya bilgi vermek ve belki de fetchEtkinlikDetay'ı çağırmamak daha iyi olabilir.
-                    // Şimdilik, eğer sinemaId yoksa ana etkinlik.id ile devam etmesine izin veriyoruz,
-                    // bu da fetchEtkinlikDetay'ın /getCinema'ya yanlış ID ile gitmesine neden olacak.
-                    // İdeal olan, burada fetchEtkinlikDetay'ı çağırmadan modalda bir uyarı göstermektir.
-                    // Ya da aşağıdaki fetchEtkinlikDetay çağrısını bir if bloğuna alıp, sinemaId yoksa çağırmamaktır.
-                    // Örneğin:
-                    // if (isSinemaEvent && (!etkinlik.sinemaId)) {
-                    //     setIsModalOpen(true); // Modal açılır ama detaylar için yükleme olmaz
-                    //     setEtkinlikDetay(null);
-                    //     setIsDetayLoading(false);
-                    //     return;
-                    // }
                 }
             } else {
                 console.log(`openModal (DİĞER): fetchEtkinlikDetay için etkinlik.id (${idForDetailFetch}) kullanılacak.`);
@@ -199,6 +186,8 @@ const OrganizatorHomePage = () => {
             }
         };
 
+    const currentEtkinlikler = etkinlikler.filter(etkinlik => !etkinlik.tarihiGectiMi);
+    const pastEtkinlikler = etkinlikler.filter(etkinlik => etkinlik.tarihiGectiMi);
 
     if (isLoading) {
         return <div className="loading-container">Etkinlikler yükleniyor...</div>;
@@ -217,31 +206,78 @@ const OrganizatorHomePage = () => {
                     <p>Yeni bir etkinlik oluşturmak için aşağıdaki '+' butonuna tıklayın.</p>
                 </div>
             )}
-            <div className="etkinlikler-container">
-                {etkinlikler.map(etkinlik => (
-                    <div key={etkinlik.id} className="etkinlik-kart" onClick={() => openModal(etkinlik)}>
-                        <div className="etkinlik-kart-header">
-                            <span className={`ohp-etkinlik-tur-adi ${etkinlik.etkinlikTurAdi?.toLowerCase()}`}>
-                                {etkinlik.etkinlikTurAdi?.toLowerCase() === "sinema" ? <Film size={20}/> : <VenetianMask size={20}/>}
-                                {etkinlik.etkinlikTurAdi || "Belirsiz"}
-                            </span>
-                            {etkinlik.yasSiniri > 0 && <span className="yas-siniri">{etkinlik.yasSiniri}+ </span>}
+
+            {/*Güncel etkinlikler kısmı */}
+            {!isLoading && etkinlikler.length > 0 && (
+                <div className="current-events-section">
+                    <h2 className="ohp-section-title">Güncel Etkinlikler</h2>
+                    {currentEtkinlikler.length === 0 ? (
+                        <p className="section-empty-message">Aktif veya gelecekteki etkinliğiniz bulunmuyor.</p>
+                    ) : (
+                        <div className="etkinlikler-container">
+                            {currentEtkinlikler.map(etkinlik => (
+                                <div key={etkinlik.id} className="etkinlik-kart" onClick={() => openModal(etkinlik)}>
+                                    <div className="etkinlik-kart-header">
+                                        <span className={`ohp-etkinlik-tur-adi ${etkinlik.etkinlikTurAdi?.toLowerCase()}`}>
+                                            {etkinlik.etkinlikTurAdi?.toLowerCase() === "sinema" ? <Film size={20}/> : <VenetianMask size={20}/>}
+                                            {etkinlik.etkinlikTurAdi || "Belirsiz"}
+                                        </span>
+                                        {etkinlik.yasSiniri > 0 && <span className="yas-siniri">{etkinlik.yasSiniri}+ </span>}
+                                    </div>
+                                    <div className="kapak-container">
+                                        <img
+                                            src={etkinlik.kapakFotografi || 'https://via.placeholder.com/300x200?text=Afiş+Yok'}
+                                            alt={etkinlik.etkinlikAdi}
+                                            className="kapak-fotografi"
+                                            onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/300x200?text=Afiş+Hatalı'; }}
+                                        />
+                                    </div>
+                                    <div className="etkinlik-kart-bilgi">
+                                        <h3>{etkinlik.etkinlikAdi}</h3>
+                                        {etkinlik.etkinlikSuresi > 0 && <p className="sure">Süre: {etkinlik.etkinlikSuresi} dk</p>}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <div className="kapak-container">
-                            <img
-                                src={etkinlik.kapakFotografi || 'https://via.placeholder.com/300x200?text=Afiş+Yok'}
-                                alt={etkinlik.etkinlikAdi}
-                                className="kapak-fotografi"
-                                onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/300x200?text=Afiş+Hatalı'; }}
-                            />
+                    )}
+                </div>
+            )}
+
+            {/*Güncel etkinlikler kısmı */}
+            {!isLoading && etkinlikler.length > 0 && (
+                <div className="past-events-section">
+                    <h2 className="ohp-section-title">Geçmiş Etkinlikler</h2>
+                    {pastEtkinlikler.length === 0 ? (
+                        <p className="section-empty-message">Geçmiş etkinliğiniz bulunmuyor.</p>
+                    ) : (
+                        <div className="etkinlikler-container">
+                            {pastEtkinlikler.map(etkinlik => (
+                                <div key={etkinlik.id} className="etkinlik-kart" onClick={() => openModal(etkinlik)}>
+                                    <div className="etkinlik-kart-header">
+                                        <span className={`ohp-etkinlik-tur-adi ${etkinlik.etkinlikTurAdi?.toLowerCase()}`}>
+                                            {etkinlik.etkinlikTurAdi?.toLowerCase() === "sinema" ? <Film size={20}/> : <VenetianMask size={20}/>}
+                                            {etkinlik.etkinlikTurAdi || "Belirsiz"}
+                                        </span>
+                                        {etkinlik.yasSiniri > 0 && <span className="yas-siniri">{etkinlik.yasSiniri}+ </span>}
+                                    </div>
+                                    <div className="kapak-container">
+                                        <img
+                                            src={etkinlik.kapakFotografi || 'https://via.placeholder.com/300x200?text=Afiş+Yok'}
+                                            alt={etkinlik.etkinlikAdi}
+                                            className="kapak-fotografi"
+                                            onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/300x200?text=Afiş+Hatalı'; }}
+                                        />
+                                    </div>
+                                    <div className="etkinlik-kart-bilgi">
+                                        <h3>{etkinlik.etkinlikAdi}</h3>
+                                        {etkinlik.etkinlikSuresi > 0 && <p className="sure">Süre: {etkinlik.etkinlikSuresi} dk</p>}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <div className="etkinlik-kart-bilgi">
-                            <h3>{etkinlik.etkinlikAdi}</h3>
-                            {etkinlik.etkinlikSuresi > 0 && <p className="sure">Süre: {etkinlik.etkinlikSuresi} dk</p>}
-                        </div>
-                    </div>
-                ))}
-            </div>
+                    )}
+                </div>
+            )}
 
             <button
                 className="plus-button"

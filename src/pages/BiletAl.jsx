@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
 import "../components/BiletAl.css";
+import { ChevronDown, ChevronUp } from 'lucide-react'; // Açılır/kapanır ikonları için ekledik (lucide-react yüklü olmalı)
 
 const BiletAl = () => {
   const { seansId, salonId, etkinlikId } = useParams();
@@ -11,6 +12,9 @@ const BiletAl = () => {
   const [secilenKoltuklar, setSecilenKoltuklar] = useState([]);
   const [etkinlikFiyati, setEtkinlikFiyati] = useState(0);
   const { user } = useAuth();
+
+  // Yeni state: Bilet fişinin açık/kapalı durumu
+  const [isBiletFisiOpen, setIsBiletFisiOpen] = useState(false);
 
   // Etkinlik fiyatı çek
   useEffect(() => {
@@ -60,10 +64,18 @@ const BiletAl = () => {
       if (seciliMi) {
         return prev.filter(k => k.koltukID !== koltuk.koltukID);
       } else {
+        // Yeni koltuk seçildiğinde, eğer bilet fişi kapalıysa açabiliriz (isteğe bağlı)
+        // setIsBiletFisiOpen(true);
         return [...prev, { ...koltuk }];
       }
     });
   };
+
+  // Bilet fişini açıp kapatma fonksiyonu
+  const toggleBiletFisi = () => {
+    setIsBiletFisiOpen(prev => !prev);
+  };
+
 
   // Biletleri satın al
   const handleBiletAl = async () => {
@@ -86,24 +98,35 @@ const BiletAl = () => {
         });
       }
 
-      alert("Bilet(ler) başarıyla alındı.");
-      setSecilenKoltuklar([]);
 
-      // Dolu koltukları tekrar yükle
+      // İşlem başarılı ise
+      alert("Bilet(ler) başarıyla alındı."); // Daha iyi bir bildirim (toast gibi) kullanın
+      setSecilenKoltuklar([]); // Seçili koltukları temizle
+      setIsBiletFisiOpen(false); // Fişi kapat (isteğe bağlı)
+
+      // Dolu koltukları tekrar yükle (güncel durumu görmek için)
       const res = await axios.get(`http://localhost:8080/api/koltuklar/dolu?seansId=${seansId}`, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       setDoluKoltuklar(res.data);
+
     } catch (err) {
-      alert("Bilet alınırken bir hata oluştu.");
-      console.error(err);
+      alert("Bilet alınırken bir hata oluştu. Detaylar için konsola bakınız."); // Kullanıcıya hata mesajı göster
+      console.error("Bilet alma hatası:", err.response?.data || err.message);
+    } finally {
+       // setIsBuying(false); // İşlem bitti, butonu tekrar aktif et
     }
   };
 
+
+  // Toplam fiyatı hesapla
+  const toplamFiyat = secilenKoltuklar.length * etkinlikFiyati;
+
   return (
     <div className="salon-container">
-      <h2>Koltuk Seç</h2>
+      <h2 className="baslık-mesafesi">Koltuk Seç</h2>
 
+      {/* Koltuk Grid */}
       <div className="koltuk-grid">
         {koltuklar.map((k) => {
           const dolu = isDolu(k.koltukID);
@@ -121,29 +144,56 @@ const BiletAl = () => {
         })}
       </div>
 
-      <div className="bilet-fisi">
-        <h3>Seçilen Koltuklar:</h3>
-        {secilenKoltuklar.length === 0 ? (
-          <p>Henüz koltuk seçilmedi.</p>
-        ) : (
-          <ul>
-            {secilenKoltuklar.map(k => (
-              <li key={k.koltukID}>
-                Koltuk No: {k.koltukNumarasi} - {etkinlikFiyati} TL
-              </li>
-            ))}
-          </ul>
-        )}
-        <p><strong>Toplam Tutar:</strong> {secilenKoltuklar.length * etkinlikFiyati} TL</p>
+      {/* Sabitlenmiş Açılır Kapanır Bilet Fişi */}
+      {/* CSS sınıfları ile pozisyonlama ve açılıp kapanma kontrol edilecek */}
+      <div className={`bilet-fisi-fixed-container ${isBiletFisiOpen ? 'is-open' : ''}`}>
+          {/* Başlık ve Açma/Kapama İkonu */}
+          <div className="bilet-fisi-header" onClick={toggleBiletFisi}>
+              <h3>Biletler ({secilenKoltuklar.length})</h3> {/* Seçili koltuk sayısını başlıkta göster */}
+              {isBiletFisiOpen ? <ChevronUp size={20} color="white"/> : <ChevronDown size={20} />}
+          </div>
+
+          {/* Açılıp Kapanan İçerik */}
+          {/* Bu div'in görünürlüğü/yüksekliği CSS tarafından .is-open sınıfına göre yönetilecek */}
+          <div className="bilet-fisi-collapsible-content">
+               {secilenKoltuklar.length === 0 ? (
+                 <p>Henüz koltuk seçilmedi.</p>
+               ) : (
+                 <ul>
+                   {secilenKoltuklar.map(k => (
+                     <li key={k.koltukID}>
+                       Koltuk No: {k.koltukNumarasi} - {etkinlikFiyati} TL
+                     </li>
+                   ))}
+                 </ul>
+               )}
+          </div>
+
+          {/* Toplam Tutar Kısmı - Her zaman görünür */}
+           <div className="bilet-fisi-total">
+                <p><strong>Toplam Tutar:</strong> {toplamFiyat} TL</p>
+           </div>
+
+          {/* Satın Al butonu - Fişin içinde olabilir */}
+           <button
+              className="buton bilet-al-button-fisi" // Farklı bir sınıf verilebilir
+              onClick={handleBiletAl}
+              disabled={secilenKoltuklar.length === 0}
+           >
+            Bilet(leri) Satın Al ({secilenKoltuklar.length})
+           </button>
       </div>
 
-      <button
+
+      {/* Orijinal Bilet Al Butonu - Artık fişin içine taşıdık, bu kaldırılabilir */}
+      {/* <button
         className="buton"
         onClick={handleBiletAl}
         disabled={secilenKoltuklar.length === 0}
       >
         Bilet(leri) Satın Al
-      </button>
+      </button> */}
+
     </div>
   );
 };

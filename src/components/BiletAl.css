@@ -3,7 +3,15 @@
     padding: 30px;
     background-color: #1e1e1e;
     color: white;
-    min-height: 100vh;
+    min-height: 85%;
+    border-radius: 30px;
+  }
+
+  .baslık-mesafesi {
+    font-family: 'Iceberg', sans-serif;
+    letter-spacing: 1px;
+    margin-top: 30px;
+    margin-bottom: 140px;
   }
 
   .koltuk-grid {
@@ -70,3 +78,138 @@
     cursor: not-allowed;
     border: 2px solid rgba(104, 144, 157, 1);
   }
+
+/* Sabitlenmiş Bilet Fişi Container - Sadece Genel Stiller ve Pozisyonlama */
+.bilet-fisi-fixed-container {
+    position: fixed;
+    top: 120px;
+    right: 40px;
+    width: 280px; /* Fişin genişliği */
+    background-color: rgba(71, 85, 90, 0.32); /* Arkaplan rengi */
+    border: 2px solid rgba(104, 144, 157, 1); /* Kenarlık */
+    border-radius: 15px; /* Köşe yuvarlaklığı */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Hafif gölge efekti */
+    z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
+    display: flex; /* İçindeki elemanları düzenlemek için flexbox kullan */
+    flex-direction: column; /* İç elemanları dikey sırala */
+}
+
+.bilet-fisi-fixed-container.is-open {
+    background-color: rgba(71, 85, 90, 1);
+}
+
+/* Bilet Fişi Başlığı (Tıklanabilir Alan) - Her zaman görünür */
+.bilet-fisi-header {
+    display: flex;
+    font-family: 'Iceberg', sans-serif;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(104, 144, 157, 1);
+    cursor: pointer;
+    user-select: none;
+}
+
+.bilet-fisi-header h3 {
+    margin: 0;
+    font-size: 1.1em;
+    color: white;
+}
+
+.bilet-fisi-header svg { /* İkonlar için stil */
+    margin-left: 10px;
+    color: #555;
+    transition: transform 0.3s ease; /* Ok ikonunu çevirme animasyonu */
+}
+
+/* Açık durumda ok ikonunu çevir */
+.bilet-fisi-fixed-container.is-open .bilet-fisi-header svg {
+    transform: rotate(180deg);
+}
+
+
+/* Açılıp Kapanan İçerik Alanı - SADECE KOLTUK LİSTESİ BU DİVDE OLACAK */
+.bilet-fisi-collapsible-content {
+    max-height: 0; /* Varsayılan: Kapalıyken yüksekliği 0 */
+    overflow: hidden; /* Yüksekliği aşan içeriği gizle */
+    transition: max-height 0.4s ease-in-out; /* max-height değişimi animasyonu */
+    padding: 0 15px; /* Yatay padding */
+    /* Dikey padding sadece açıkken verilecek */
+}
+
+/* Ana container açıkken, koltuk listesi içeriğinin max-height'ını artır */
+.bilet-fisi-fixed-container.is-open .bilet-fisi-collapsible-content {
+    max-height: 300px; /* Listeyi gösterecek kadar büyük bir değer */
+    padding-top: 10px; /* Açıkken üstten padding */
+    padding-bottom: 10px; /* Açıkken alttan padding */
+    overflow-y: auto; /* Liste max-height'ı aşarsa scrollbar çıksın */
+}
+
+/* Koltuk listesi içindeki p ve ul stilleri */
+.bilet-fisi-collapsible-content p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #666;
+    /* Paddingler üst container'dan geliyor */
+}
+
+.bilet-fisi-collapsible-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0; /* Marginleri kaldır */
+}
+
+.bilet-fisi-collapsible-content li {
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    color: white;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 5px;
+}
+
+/* Toplam Tutar Kısmı - HER ZAMAN GÖRÜNÜR */
+.bilet-fisi-total {
+    padding: 10px 15px; /* Yatay padding */
+    border-top: 1px solid rgba(104, 144, 157, 1); /* Başlıktan ve koltuk listesinden ayır */
+    font-family: 'Iceberg', sans-serif;
+    font-size: 1.3em;
+    font-weight: bold;
+    background-color: rgba(71, 85, 90, 0.32);
+    color: rgba(255, 255, 255, 1);
+    /* Flexbox içinde özel hizalama gerekiyorsa eklenebilir, şu an dikey akışta */
+}
+
+.bilet-fisi-total p {
+    margin: 0; /* Varsayılan p marginlerini kaldır */
+}
+
+
+/* Fişin içindeki Satın Al butonu - HER ZAMAN GÖRÜNÜR */
+.bilet-al-button-fisi {
+    display: block; /* Kendi satırında ve tam genişlikte */
+    width: calc(100% - 30px); /* Container genişliğinden paddingleri düş */
+    margin: 10px 15px 15px 15px; /* Üstten 10, yanlardan 15, alttan 15 boşluk */
+    padding: 10px;
+    text-align: center;
+    /* Diğer buton stilleriniz (.buton sınıfından gelen) burada da uygulanmalı veya kopyalanmalı */
+}
+
+/* .buton stiliniz */
+.buton {
+    /* ... mevcut buton stilleriniz */
+    background-color: rgba(55, 127, 0, 1);
+    color: white;
+    border: 2px solid rgba(83, 168, 17, 1);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buton:hover:not(:disabled) {
+    background-color: rgba(83, 168, 17, 1);
+}
+
+.buton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
