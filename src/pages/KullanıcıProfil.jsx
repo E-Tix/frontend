@@ -41,14 +41,14 @@ const KullaniciProfil = () => {
     };
 
     const validateEmail = (email) => {
-        const re = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
         return re.test(String(email).toLowerCase());
     };
 
     const validatePhone = (phone) => {
         if (!phone) return true;
         const cleaned = phone.replace(/\D/g, '');
-        return /^5\d{9}$/.test(cleaned);
+        return /^0\d{10}$/.test(cleaned);
     };
 
     const handleChange = (e) => {
@@ -83,7 +83,7 @@ const KullaniciProfil = () => {
             setErrors({
                 ...errors,
                 email: value.trim() && !validateEmail(value)
-                    ? "Email formatı XXXX@gmail.com şeklindedir"
+                    ? "Email formatı XXXX@xxx.com şeklindedir"
                     : ""
             });
         }
